@@ -1,3 +1,4 @@
+- [Home](/)
 - Object Reference
 
   - Methods
