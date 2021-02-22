@@ -14,4 +14,4 @@ Download the cDict.cls file and add it to your project.
 
 
 ## Documentation
-[Read the docs] for usage and examples.
+[Read the docs](https://sslinky.github.io/VBA-ExtendedDictionary/#/) for usage and examples.
