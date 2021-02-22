@@ -1,4 +1,4 @@
-- [Home](/)
+- [Home](/ "VBA-ExtendedDictionary")
 - Object Reference
 
   - Methods
