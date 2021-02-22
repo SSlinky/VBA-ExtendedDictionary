@@ -2,7 +2,7 @@
 Adds a key and item pair to the Scripting.Dictionary
 
 ## Syntax
-_object_.**Add** _Key, _Val_
+_object_.**Add** _Key_, _Val_
 
 The **Add** method has the following parts:
 

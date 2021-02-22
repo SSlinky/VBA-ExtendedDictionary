@@ -3,7 +3,7 @@ Wrapper property that returns the value for the specified key if it exists.
 If it doesn't exist, it returns the default rather than raise an error.
 
 ## Syntax
-_object_.**GetValue** _Key, _ItemDefault_
+_object_.**GetValue** _Key_, _ItemDefault_
 
 The **GetValue** method has the following parts:
 
