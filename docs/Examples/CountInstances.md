@@ -10,7 +10,7 @@ ExtendedDictionary (ed) makes this trivial.
 2. Add the data to ed using the `AddBulk` method with `OptionCountKeys` enabled.
 3. Use the `GetValue` method to safely retrieve a value, or return the deafult 0 if it doesn't exist.
 
-```vb
+```vba
 Option Explicit
 
 Sub CountInstances()
