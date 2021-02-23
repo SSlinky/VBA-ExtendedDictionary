@@ -21,6 +21,25 @@ Option Explicit
 
 
 ' ------------------------------------------------
+'   Enums - must be at top of module
+' ------------------------------------------------
+
+'A value representing the comparison mode used by functions such
+'as StrComp. Can only be changed while the dictionary has no data.
+Enum CompareModeType
+'   Performs a comparison by using the setting of the Option Compare statement.
+    vbUseCompareOption = -1
+'   Performs a binary comparison.    
+    vbBinaryCompare = 0
+'   Performs a textual comparison.    
+    vbTextCompare = 1
+'   Microsoft Access only. Performs a comparison based on information
+'   in your database. This option is included for completeness only.
+    vbDatabaseCompare = 2
+End Enum
+
+
+' ------------------------------------------------
 '   Private Properties
 ' ------------------------------------------------
 
@@ -44,20 +63,6 @@ End Sub
 ' ------------------------------------------------
 '   Public Properties
 ' ------------------------------------------------
-
-'A value representing the comparison mode used by functions such
-'as StrComp. Can only be changed while the dictionary has no data.
-Enum CompareModeType
-'   Performs a comparison by using the setting of the Option Compare statement.
-    vbUseCompareOption = -1
-'   Performs a binary comparison.    
-    vbBinaryCompare = 0
-'   Performs a textual comparison.    
-    vbTextCompare = 1
-'   Microsoft Access only. Performs a comparison based on information
-'   in your database. This option is included for completeness only.
-    vbDatabaseCompare = 2
-End Enum
 
 'Prevents .Add from failing when the key already exists.
 'Prevents .Item from failing when the key doesn't exist.
