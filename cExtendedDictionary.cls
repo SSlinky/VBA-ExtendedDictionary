@@ -29,9 +29,9 @@ Option Explicit
 Enum CompareModeType
 '   Performs a comparison by using the setting of the Option Compare statement.
     vbUseCompareOption = -1
-'   Performs a binary comparison.    
+'   Performs a binary comparison.
     vbBinaryCompare = 0
-'   Performs a textual comparison.    
+'   Performs a textual comparison.
     vbTextCompare = 1
 '   Microsoft Access only. Performs a comparison based on information
 '   in your database. This option is included for completeness only.
@@ -121,6 +121,68 @@ Public Property Get GetValue(Key As Variant, ItemDefault As Variant) As Variant
     End If
 End Property
 
+'Returns the dictionary data in a similar fashion to how it is
+'loaded in with AddBulk.
+Public Property Get Data(Optional OptionUseRowMode As Boolean) As Variant
+    Dim r As Long, c As Long
+    
+    Dim arrKeys     As Variant
+    Dim arrVals     As Variant
+    Dim results()   As Variant
+    Dim keyRows     As Long
+    Dim valCols     As Long
+    
+    arrKeys = mBaseDict.Keys()
+    arrVals = mBaseDict.Items()
+    keyRows = UBound(arrKeys) + 1
+                  
+'   Check how many columns the values array has
+    If Not TypeName(arrVals(0)) = "Nothing" Then
+        valCols = nArrayDimensions(arrVals(0))
+        If valCols = 1 Then valCols = UBound(arrVals(0)) + 1
+    End If
+    
+    If valCols = 0 Then
+'       Test whether there are any values
+        For r = 0 To UBound(arrVals)
+            If Not TypeName(arrVals(0)) = "Nothing" Then
+                valCols = 1
+                Exit For
+            End If
+        Next r
+    End If
+    
+'   Add a column for the keys
+    valCols = valCols + 1
+    
+'   Set up results array in the shape of the keys and values
+'   adding an additional column to fit the keys as a column
+    ReDim results(1 To keyRows, _
+                  1 To valCols)
+
+    
+'   Populate the row(s) and column(s)
+    For r = 1 To keyRows
+        results(r, 1) = arrKeys(r - 1)
+        If valCols > 2 Then
+'           Populate columns for multi-column
+            For c = 2 To valCols
+                results(r, c) = arrVals(r - 1)(c - 2)
+            Next c
+        ElseIf valCols = 2 Then
+'           Populate single value
+            results(r, 2) = arrVals(r - 1)
+        End If
+    Next r
+    
+    If OptionUseRowMode Then
+        Data = Application.Transpose(results)
+    Else
+        Data = results
+    End If
+    
+End Property
+
 
 ' ------------------------------------------------
 '   Public Methods
@@ -148,7 +210,7 @@ End Sub
 'Automatically detects array size and adds values based on number of values per key.
 '   0 : Keys only (values are Nothing)
 '   1 : Single values only
-'  >1 : Values are a 1D array of values 
+'  >1 : Values are a 1D array of values
 Public Sub AddBulk(ValueArray2D As Variant, _
                     Optional OptionUseRowMode As Boolean, _
                     Optional OptionCountKeys As Boolean)
@@ -169,7 +231,7 @@ Public Sub AddBulk(ValueArray2D As Variant, _
     r = UBound(ValueArray2D, 1)
     
     If OptionUseRowMode Then
-'       Keys are column headers, add values by rows    
+'       Keys are column headers, add values by rows
         For i = 1 To c
             k = ValueArray2D(1, i)
             If OptionCountKeys Then
@@ -179,7 +241,7 @@ Public Sub AddBulk(ValueArray2D As Variant, _
 '               Add the values by row for header
                 Select Case r
                     Case 2:
-'                       Add singular value                    
+'                       Add singular value
                         v = ValueArray2D(2, i)
                     Case Is > 2:
 '                       Add array of values from rows
@@ -195,7 +257,7 @@ Public Sub AddBulk(ValueArray2D As Variant, _
             mBaseDict.Add k, v
         Next i
     Else
-'       Keys are row headers, add values by columns    
+'       Keys are row headers, add values by columns
         For i = 1 To r
             k = ValueArray2D(i, 1)
             If OptionCountKeys Then
@@ -204,16 +266,16 @@ Public Sub AddBulk(ValueArray2D As Variant, _
 '               Add the values by column for header
                 Select Case c
                     Case 2:
-'                       Add singular value                     
+'                       Add singular value
                         v = ValueArray2D(i, 2)
                     Case Is > 2:
-'                       Add array of values from columns                    
+'                       Add array of values from columns
                         ReDim v(c - 2)
                         For j = 0 To c - 2
                             v(j) = ValueArray2D(i, j + 2)
                         Next j
                     Case Else
-'                       Default (no values)                    
+'                       Default (no values)
                         Set v = Nothing
                 End Select
             End If
@@ -241,4 +303,28 @@ End Function
 'Returns an array containing all existing keys in the Scripting.Dictionary.
 Public Function Keys()
     Keys = mBaseDict.Keys
+End Function
+
+
+' ------------------------------------------------
+'   Private Helpers
+' ------------------------------------------------
+
+
+'Returns the number of dimensions in the passed in array
+'This is a hack that intentionally seeks to raise an
+'exception as there is no property or elegant way to do this.
+Private Function nArrayDimensions(arr) As Long
+    Dim i As Long
+    
+'   Test array dimensions until exception raised
+    On Error GoTo ReportResult
+    Do
+        i = i + 1
+        nArrayDimensions = UBound(arr, i)
+    Loop
+    
+ReportResult:
+    Err.Clear
+    nArrayDimensions = i - 1
 End Function
