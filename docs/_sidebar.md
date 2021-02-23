@@ -9,4 +9,6 @@
   - Properties
     - [OptionNoItemFail](ObjectReference/Properties/OptionNoItemFail.md "VBA-ExtendedDictionary - Properties - OptionNoItemFail")
  
-[Examples](/)
+- Examples
+
+  - [Count Instances](Examples/CountInstances.md "VBA-ExtendedDictionary - Examples - CountInstances")
