@@ -7,11 +7,11 @@ _object_.**GetValue** _Key_, _ItemDefault_
 
 The **GetValue** method has the following parts:
 
-Part | Description
---------- | ----------
-_object_ | Required. Always the name of a **cExtendedDictionary** object.
-_Key_ | Required. They key associated with the value being looked up.
-_ItemDefault_ | Required. The default value to be returned if the key is not found.
+Part            | Description
+:---            | :---
+_object_        | Required. Always the name of a **cExtendedDictionary** object.
+_Key_           | Required. They key associated with the value being looked up.
+_ItemDefault_   | Required. The default value to be returned if the key is not found.
 
 ## Remarks
 This method has been added to provide an equivalent getter to those found in other modern languages.

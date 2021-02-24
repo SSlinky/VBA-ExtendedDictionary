@@ -6,10 +6,10 @@ _object_.**Getdata** _Key_, _[OptionUseRowMode]_
 
 The **Getdata** method has the following parts:
 
-Part               | Description
-:---               | :---
-_object_           | Required. Always the name of a **cExtendedDictionary** object.
-_OptionUseRowMode_ | Optional. Orients keys and values vertically or horizontally.
+Part                | Description
+:---                | :---
+_object_            | Required. Always the name of a **cExtendedDictionary** object.
+_OptionUseRowMode_  | Optional. Orients keys and values vertically or horizontally.
 
 ## Remarks
 `OptionUseRowMode:=True` keys are arranged across columns in the first row. Values populate rows below their respective key.

@@ -6,12 +6,12 @@ _object_.**AddBulk** _ValueArray2D_, _[OptionUseRowMode]_, _[OptionCountKeys]_
 
 The **AddBulk** method has the following parts:
 
-Part | Description
---------- | ----------
-_object_ | Required. Always the name of a **cExtendedDictionary** object.
-_ValueArray2D_ | Required. A two dimensional array of at least one row and column.
-_[OptionUseRowMode]_ | Optional. Use the first row instead of the first column as keys.
-_[OptionCountKeys]_ | Optional. The value is the number of times the key has been found. This will force `OptionNoItemFail` to True.
+Part                    | Description
+:---                    | :---
+_object_                | Required. Always the name of a **cExtendedDictionary** object.
+_ValueArray2D_          | Required. A two dimensional array of at least one row and column.
+_[OptionUseRowMode]_    | Optional. Use the first row instead of the first column as keys.
+_[OptionCountKeys]_     | Optional. The value is the number of times the key has been found. This will force `OptionNoItemFail` to True.
 
 ## Examples
 ### Key only
