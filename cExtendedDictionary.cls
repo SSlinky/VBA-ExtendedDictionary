@@ -123,7 +123,7 @@ End Property
 
 'Returns the dictionary data in a similar fashion to how it is
 'loaded in with AddBulk.
-Public Property Get Data(Optional OptionUseRowMode As Boolean) As Variant
+Public Function GetData(Optional OptionUseRowMode As Boolean) As Variant
     Dim r As Long, c As Long
     
     Dim arrKeys     As Variant
