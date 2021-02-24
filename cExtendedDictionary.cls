@@ -164,7 +164,10 @@ End Sub
 
 'Removes a key/item pair from the Scripting.Dictionary.
 Public Sub Remove(Key As Variant)
+    Dim val As Variant
+    val = Me.Item(Key)
     mBaseDict.Remove Key
+    UntrackLargestValue val
 End Sub
 
 'The RemoveAll method removes all key, item pairs from the Scripting.Dictionary.
@@ -344,21 +347,63 @@ End Function
 
 'Sets the metadata associated with the value
 Private Sub SetMetaData(val As Variant)
-    If TypeName(val) = "Nothing" Then Exit Sub
+    Dim valSize As Long
     
-    Select Case NArrayDimensions(val)
-'       Try to set the largest value array as 1
-        Case Is = 0
-            If mDataShapeValues < 1 Then
-                mDataShapeValues = 1
-            End If
-'       Try to set the largest value array as the array length
-        Case Is = 1:
-            If mDataShapeValues <= UBound(val) Then
-                mDataShapeValues = UBound(val) + 1
-            End If
-    End Select
+'   Get the size of the value or array
+    valSize = GetValueOrArraySize(val)
+    
+'   Set the longest value if it is longer
+    If valSize > mDataShapeValues Then _
+        mDataShapeValues = valSize
 End Sub
+
+'Untracks the largest sized value array and resets
+'to the next smallest size array.
+Private Sub UntrackLargestValue(remVal As Variant)
+    Dim val         As Variant
+    Dim valSize     As Long
+    Dim remValSize  As Long
+
+
+'   Handle last value being removed
+    If Me.Count = 0 Then
+        mDataShapeValues = 0
+        Exit Sub
+    End If
+    
+'   Get the size of the value or array being removed
+    remValSize = GetValueOrArraySize(remVal)
+    
+'   Reset the internal tracking
+    mDataShapeValues = 0
+    
+'   Find the next largest item
+    For Each val In Me.Items
+        valSize = GetValueOrArraySize(val)
+        
+'       Next largest is one smaller
+        If valSize = remValSize - 1 Then
+            mDataShapeValues = valSize
+            Exit Sub
+        End If
+        
+'       All other values
+        If valSize > mDataShapeValues Then _
+            mDataShapeValues = valSize
+    Next val
+End Sub
+
+'Returns the length of the array or 1 for a value
+Private Function GetValueOrArraySize(val) As Long
+'   Handle the value being Nothing
+    If TypeName(val) = "Nothing" Then Exit Function
+    
+'   Get the size of the array or 1 if not an array
+    Select Case NArrayDimensions(val)
+        Case Is = 0: GetValueOrArraySize = 1
+        Case Is = 1: GetValueOrArraySize = UBound(val) + 1
+    End Select
+End Function
 
 'Returns the smaller of the two passed in values
 Private Function Min(a, b)
