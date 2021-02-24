@@ -50,6 +50,9 @@ Private mBaseDict As Object
 ' or not. Set True to prevent duplicates raising an error.
 Private mOptionNoItemFail As Boolean
 
+' The largest value array.
+Private mDataShapeValues
+
 
 ' ------------------------------------------------
 '   Constructor
@@ -70,8 +73,8 @@ Public Property Get OptionNoItemFail() As Boolean
     OptionNoItemFail = mOptionNoItemFail
 End Property
 
-Public Property Let OptionNoItemFail(Val As Boolean)
-    mOptionNoItemFail = Val
+Public Property Let OptionNoItemFail(val As Boolean)
+    mOptionNoItemFail = val
 End Property
 
 'Sets the CompareMode of the underlying Scripting.Dictionary.
@@ -100,9 +103,10 @@ Public Property Get Item(Key As Variant) As Variant
     End If
 End Property
 
-Public Property Let Item(Key As Variant, Val As Variant)
+Public Property Let Item(Key As Variant, val As Variant)
     If mOptionNoItemFail Then On Error Resume Next
-    mBaseDict.Item(Key) = Val
+    mBaseDict.Item(Key) = val
+    If Err = 0 Then SetMetaData val
     On Error GoTo 0
 End Property
 
@@ -121,66 +125,23 @@ Public Property Get GetValue(Key As Variant, ItemDefault As Variant) As Variant
     End If
 End Property
 
-'Returns the dictionary data in a similar fashion to how it is
-'loaded in with AddBulk.
-Public Function GetData(Optional OptionUseRowMode As Boolean) As Variant
-    Dim r As Long, c As Long
-    
-    Dim arrKeys     As Variant
-    Dim arrVals     As Variant
-    Dim results()   As Variant
-    Dim keyRows     As Long
-    Dim valCols     As Long
-    
-    arrKeys = mBaseDict.Keys()
-    arrVals = mBaseDict.Items()
-    keyRows = UBound(arrKeys) + 1
-                  
-'   Check how many columns the values array has
-    If Not TypeName(arrVals(0)) = "Nothing" Then
-        valCols = nArrayDimensions(arrVals(0))
-        If valCols = 1 Then valCols = UBound(arrVals(0)) + 1
-    End If
-    
-    If valCols = 0 Then
-'       Test whether there are any values
-        For r = 0 To UBound(arrVals)
-            If Not TypeName(arrVals(0)) = "Nothing" Then
-                valCols = 1
-                Exit For
-            End If
-        Next r
-    End If
-    
-'   Add a column for the keys
-    valCols = valCols + 1
-    
-'   Set up results array in the shape of the keys and values
-'   adding an additional column to fit the keys as a column
-    ReDim results(1 To keyRows, _
-                  1 To valCols)
 
-    
-'   Populate the row(s) and column(s)
-    For r = 1 To keyRows
-        results(r, 1) = arrKeys(r - 1)
-        If valCols > 2 Then
-'           Populate columns for multi-column
-            For c = 2 To valCols
-                results(r, c) = arrVals(r - 1)(c - 2)
-            Next c
-        ElseIf valCols = 2 Then
-'           Populate single value
-            results(r, 2) = arrVals(r - 1)
-        End If
-    Next r
-    
-    If OptionUseRowMode Then
-        Data = Application.Transpose(results)
-    Else
-        Data = results
-    End If
-    
+'Returns the row count that would be returned by the GetData method
+'The values are always +1 to account for the first row being keys
+Public Property Get DataRows(Optional OptionUseRowMode As Boolean) As Long
+'   OptionUseRowMode=True:  Returns the longest array size of values
+'                           plus row for keys (if they exist)
+'   OptionUseRowMode=False: Returns the count of the keys
+    DataRows = IIf(OptionUseRowMode, mDataShapeValues + Min(1, Me.Count), Me.Count)
+End Property
+
+'Returns the column count that would be returned by the GetData method
+'The values are always +1 to account for the first col being keys
+Public Property Get DataCols(Optional OptionUseRowMode As Boolean) As Long
+'   OptionUseRowMode=True:  Returns the count of the keys
+'   OptionUseRowMode=False: Returns the longest array size of values
+'                           plus 1 col for keys (if they exist)
+    DataCols = IIf(OptionUseRowMode, Me.Count, mDataShapeValues + Min(1, Me.Count))
 End Property
 
 
@@ -189,10 +150,15 @@ End Property
 ' ------------------------------------------------
 
 'Adds a key and item pair to the Scripting.Dictionary
-Public Sub Add(Key As Variant, Val As Variant)
+Public Sub Add(Key As Variant, val As Variant)
     If mOptionNoItemFail Then On Error Resume Next
-    mBaseDict.Add Key, Val
-    If Err = 457 Then Me.Item(Key) = Val
+    mBaseDict.Add Key, val
+    
+    If Err = 457 Then
+        Me.Item(Key) = val
+    Else: SetMetaData val
+    End If
+    
     On Error GoTo 0
 End Sub
 
@@ -204,6 +170,7 @@ End Sub
 'The RemoveAll method removes all key, item pairs from the Scripting.Dictionary.
 Public Sub RemoveAll()
     mBaseDict.RemoveAll
+    mDataShapeValues = 0
 End Sub
 
 'Adds key value pairs from a 2D array. Supports keys as first row or firt column.
@@ -305,6 +272,52 @@ Public Function Keys()
     Keys = mBaseDict.Keys
 End Function
 
+'Returns the dictionary data in a similar fashion to how it is
+'loaded in with AddBulk.
+Public Function GetData(Optional OptionUseRowMode As Boolean) As Variant
+    Dim r As Long, c As Long
+    
+    Dim arrKeys     As Variant
+    Dim arrVals     As Variant
+    Dim results()   As Variant
+    Dim keyRows     As Long
+    Dim valCols     As Long
+    
+    arrKeys = mBaseDict.Keys()
+    arrVals = mBaseDict.Items()
+    keyRows = UBound(arrKeys) + 1
+    
+    keyRows = Me.DataRows()
+    valCols = Me.DataCols()
+    
+'   Set up results array in the shape of the keys and values
+'   adding an additional column to fit the keys as a column
+    ReDim results(1 To keyRows, _
+                  1 To valCols)
+
+    
+'   Populate the row(s) and column(s)
+    For r = 1 To keyRows
+        results(r, 1) = arrKeys(r - 1)
+        If valCols > 2 Then
+'           Populate columns for multi-column
+            For c = 2 To valCols
+                results(r, c) = arrVals(r - 1)(c - 2)
+            Next c
+        ElseIf valCols = 2 Then
+'           Populate single value
+            results(r, 2) = arrVals(r - 1)
+        End If
+    Next r
+    
+    If OptionUseRowMode Then
+        GetData = Application.Transpose(results)
+    Else
+        GetData = results
+    End If
+    
+End Function
+
 
 ' ------------------------------------------------
 '   Private Helpers
@@ -314,17 +327,40 @@ End Function
 'Returns the number of dimensions in the passed in array
 'This is a hack that intentionally seeks to raise an
 'exception as there is no property or elegant way to do this.
-Private Function nArrayDimensions(arr) As Long
+Private Function NArrayDimensions(arr) As Long
     Dim i As Long
     
 '   Test array dimensions until exception raised
     On Error GoTo ReportResult
     Do
         i = i + 1
-        nArrayDimensions = UBound(arr, i)
+        NArrayDimensions = UBound(arr, i)
     Loop
     
 ReportResult:
     Err.Clear
-    nArrayDimensions = i - 1
+    NArrayDimensions = i - 1
+End Function
+
+'Sets the metadata associated with the value
+Private Sub SetMetaData(val As Variant)
+    If TypeName(val) = "Nothing" Then Exit Sub
+    
+    Select Case NArrayDimensions(val)
+'       Try to set the largest value array as 1
+        Case Is = 0
+            If mDataShapeValues < 1 Then
+                mDataShapeValues = 1
+            End If
+'       Try to set the largest value array as the array length
+        Case Is = 1:
+            If mDataShapeValues <= UBound(val) Then
+                mDataShapeValues = UBound(val) + 1
+            End If
+    End Select
+End Sub
+
+'Returns the smaller of the two passed in values
+Private Function Min(a, b)
+    Min = IIf(a < b, a, b)
 End Function
