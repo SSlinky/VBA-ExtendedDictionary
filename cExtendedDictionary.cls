@@ -381,8 +381,8 @@ Private Sub UntrackLargestValue(remVal As Variant)
     For Each val In Me.Items
         valSize = GetValueOrArraySize(val)
         
-'       Next largest is one smaller
-        If valSize = remValSize - 1 Then
+'       Next largest is the same size
+        If valSize = remValSize Then
             mDataShapeValues = valSize
             Exit Sub
         End If
