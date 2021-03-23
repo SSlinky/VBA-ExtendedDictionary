@@ -3,7 +3,7 @@ Dictionary object that extends the Scripting.Dictionary
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/SSlinky/VBA-ExtendedDictionary/blob/master/README.md#license)
 [![VBA](https://img.shields.io/badge/vba-VB--6-success)](https://docs.microsoft.com/en-us/office/vba/api/overview/)
-[![Buy me a Beer!](https://img.shields.io/badge/Buy%20me%20a-Beer-yellow)
+[![Buy me a Beer!](https://img.shields.io/badge/Buy%20me%20a-Beer-yellow)](www.buymeacoffee.com/sslinky)
 
 ExtendedDictionary exposes the standard functionality of a [Scripting.Dictionary object](https://docs.microsoft.com/en-au/office/vba/language/reference/user-interface-help/dictionary-object) as well as providing additional useful functionality that avoids boilerplate.
 
