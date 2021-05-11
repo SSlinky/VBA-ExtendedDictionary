@@ -224,7 +224,7 @@ Public Sub AddBulk(ValueArray2D As Variant, _
                         v = Nothing
                 End Select
             End If
-            mBaseDict.Add k, v
+            Me.Add k, v
         Next i
     Else
 '       Keys are row headers, add values by columns
