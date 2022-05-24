@@ -261,7 +261,7 @@ End Sub
 
 'Returns True if a specified key exists in the Scripting.Dictionary
 'object; False if it does not.
-Public Function Exists(Key As String) As Boolean
+Public Function Exists(Key As Variant) As Boolean
     Exists = mBaseDict.Exists(Key)
 End Function
 
