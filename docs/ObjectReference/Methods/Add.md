@@ -8,7 +8,7 @@ The **Add** method has the following parts:
 
 Part               | Description
 :---               | :---
-_object_           | Required. Always the name of a **cExtendedDictionary** object.
+_object_           | Required. Always the name of a **Dictionary** object.
 _Key_              | Required. They key associated with the item being added.
 _Val_              | Required. The value associated with the key being added.
 

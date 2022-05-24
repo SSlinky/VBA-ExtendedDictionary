@@ -8,7 +8,7 @@ The **AddBulk** method has the following parts:
 
 Part                    | Description
 :---                    | :---
-_object_                | Required. Always the name of a **cExtendedDictionary** object.
+_object_                | Required. Always the name of a **Dictionary** object.
 _ValueArray2D_          | Required. A two dimensional array of at least one row and column.
 _[OptionUseRowMode]_    | Optional. Use the first row instead of the first column as keys.
 _[OptionCountKeys]_     | Optional. The value is the number of times the key has been found. This will force `OptionNoItemFail` to True.
@@ -17,7 +17,7 @@ _[OptionCountKeys]_     | Optional. The value is the number of times the key has
 ### Key only
 Load a simple 2D array with only one column. The values will be defaulted to Nothing.
 ```vba
-Dim ed As New cExtendedDictionary
+Dim ed As New Dictionary
 ed.AddBulk Range("A1:A50").Value
 ```
 
@@ -25,7 +25,7 @@ ed.AddBulk Range("A1:A50").Value
 Load a simple 2D array where the first column is the key and the second column is the value.
 
 ```vba
-Dim ed As New cExtendedDictionary
+Dim ed As New Dictionary
 ed.AddBulk Range("A1:B50").Value
 ```
 
@@ -34,7 +34,7 @@ Load a 2D array with a key and more than one value. Using `OptionUseRowMode` we 
 array rather than the default first column behaviour.
 
 ```vba
-Dim ed As New cExtendedDictionary
+Dim ed As New Dictionary
 ed.AddBulk Range("A1:Z5").Value, OptionUseRowMode=True
 ```
 
@@ -43,7 +43,7 @@ Load simple 2D array. Only the first row or column will be considered, depending
 appears in the passed in array.
 
 ```vba
-Dim ed As New cExtendedDictionary
+Dim ed As New Dictionary
 ed.AddBulk Range("A1:A500").Value, OptionCountKeys=True
 ```
 

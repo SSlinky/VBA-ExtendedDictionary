@@ -9,7 +9,7 @@ The **GetValue** method has the following parts:
 
 Part            | Description
 :---            | :---
-_object_        | Required. Always the name of a **cExtendedDictionary** object.
+_object_        | Required. Always the name of a **Dictionary** object.
 _Key_           | Required. They key associated with the value being looked up.
 _ItemDefault_   | Required. The default value to be returned if the key is not found.
 
@@ -20,7 +20,7 @@ This method has been added to provide an equivalent getter to those found in oth
 ### Key value counts
 
 ```vba
-Dim cityCounter As New cExtendedDictionary
+Dim cityCounter As New Dictionary
 cityCounter.AddBulk Range("A1:A500").Value, OptionCountKeys=True
 
 ' Assume the key Perth appeared in the data 5 times but Melbourne

@@ -13,7 +13,7 @@ ExtendedDictionary exposes the standard functionality of a [Scripting.Dictionary
 * Wrapper to get value or default similar to modern languages.
 
 ## Installation
-Download the cDict.cls file and add it to your project.
+Download the Dictionary.cls file and add it to your project.
 
 ## Documentation
 [Read the docs](https://sslinky.github.io/VBA-ExtendedDictionary/#/) for usage and examples.
