@@ -1,6 +1,6 @@
 VERSION 1.0 CLASS
 BEGIN
-MultiUse = -1  'True
+  MultiUse = -1  'True
 END
 Attribute VB_Name = "Dictionary"
 Attribute VB_GlobalNameSpace = False
@@ -287,7 +287,7 @@ End Sub
 
 'Returns True if a specified key exists in the Scripting.Dictionary
 'object; False if it does not.
-Public Function Exists(Key As String) As Boolean
+Public Function Exists(Key As Variant) As Boolean
     Exists = mBaseDict.Exists(Key)
 End Function
 

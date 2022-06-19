@@ -8,7 +8,7 @@ The **GetData** method has the following parts:
 
 Part                | Description
 :---                | :---
-_object_            | Required. Always the name of a **cExtendedDictionary** object.
+_object_            | Required. Always the name of a **Dictionary** object.
 _OptionUseRowMode_  | Optional. Orients keys and values vertically or horizontally.
 
 ## Remarks

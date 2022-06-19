@@ -21,7 +21,7 @@ Sub CountInstances()
     Dim k   As Variant
     Dim r   As Range
     
-    Dim ed As New cExtendedDictionary
+    Dim ed As New Dictionary
     
 '   Arrange the visible data into an array
     Set rg = Range("A1:A" & Range("A" & Rows.Count).End(xlUp).Row)
