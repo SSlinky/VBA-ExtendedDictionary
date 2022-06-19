@@ -107,7 +107,6 @@ Public Property Let Item(Key As Variant, val As Variant)
     If mOptionNoItemFail Then On Error Resume Next
     mBaseDict.Item(Key) = val
     If Err = 0 Then SetMetaData val
-    On Error GoTo 0
 End Property
 
 'Updates a key, replacing the old key with the new key.
@@ -158,8 +157,6 @@ Public Sub Add(Key As Variant, val As Variant)
         Me.Item(Key) = val
     Else: SetMetaData val
     End If
-    
-    On Error GoTo 0
 End Sub
 
 'Removes a key/item pair from the Scripting.Dictionary.
