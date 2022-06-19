@@ -95,9 +95,11 @@ End Property
 'Sets or returns an item for a specified key.
 Public Property Get Item(Key As Variant) As Variant
     If mOptionNoItemFail Then
-        If mBaseDict.Exists(Key) Then
-            Item = mBaseDict.Item(Key)
-        End If
+        If Not mBaseDict.Exists(Key) Then Exit Property
+    End If
+
+    If IsObject(mBaseDict.Item(Key)) Then
+        Set Item = mBaseDict.Item(Key)
     Else
         Item = mBaseDict.Item(Key)
     End If
@@ -106,6 +108,12 @@ End Property
 Public Property Let Item(Key As Variant, val As Variant)
     If mOptionNoItemFail Then On Error Resume Next
     mBaseDict.Item(Key) = val
+    If Err = 0 Then SetMetaData val
+End Property
+
+Public Property Set Item(Key As Variant, val As Variant)
+    If mOptionNoItemFail Then On Error Resume Next
+    Set mBaseDict.Item(Key) = val
     If Err = 0 Then SetMetaData val
 End Property
 
@@ -118,9 +126,17 @@ End Property
 'If it doesn't exist, it returns the default rather than raise an error.
 Public Property Get GetValue(Key As Variant, ItemDefault As Variant) As Variant
     If mBaseDict.Exists(Key) Then
-        GetValue = mBaseDict.Item(Key)
+        If IsObject(mBaseDict.Item(Key)) Then
+            Set GetValue = mBaseDict.Item(Key)
+        Else
+            GetValue = mBaseDict.Item(Key)
+        End If
     Else
-        GetValue = ItemDefault
+        If IsObject(ItemDefault) Then
+            Set GetValue = ItemDefault
+        Else
+            GetValue = ItemDefault
+        End If
     End If
 End Property
 
@@ -154,7 +170,11 @@ Public Sub Add(Key As Variant, val As Variant)
     mBaseDict.Add Key, val
     
     If Err = 457 Then
-        Me.Item(Key) = val
+        If IsObject(val) Then
+            Set Item(Key) = val
+        Else
+            Item(Key) = val
+        End If
     Else: SetMetaData val
     End If
 End Sub
