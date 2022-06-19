@@ -183,7 +183,8 @@ End Sub
 '  >1 : Values are a 1D array of values
 Public Sub AddBulk(ValueArray2D As Variant, _
                     Optional OptionUseRowMode As Boolean, _
-                    Optional OptionCountKeys As Boolean)
+                    Optional OptionCountKeys As Boolean, _
+                    Optional DefaultValue As Variant)
 '       OptionUseRowMode : Use the first row instead of column as keys
 '       OptionCountKeys  : The value is the number of times the key has been found
 '                          This will force OptionNoItemFail to True
@@ -221,7 +222,11 @@ Public Sub AddBulk(ValueArray2D As Variant, _
                         Next j
                     Case Else
 '                       Default (no values)
-                        v = Nothing
+                        If IsObject(DefaultValue) Then
+                            Set v = DefaultValue
+                        Else
+                            v = DefaultValue
+                        End If
                 End Select
             End If
             Me.Add k, v
@@ -246,7 +251,11 @@ Public Sub AddBulk(ValueArray2D As Variant, _
                         Next j
                     Case Else
 '                       Default (no values)
-                        Set v = Nothing
+                        If IsObject(DefaultValue) Then
+                            Set v = DefaultValue
+                        Else
+                            v = DefaultValue
+                        End If
                 End Select
             End If
             Me.Add k, v
