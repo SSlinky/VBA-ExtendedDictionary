@@ -147,7 +147,7 @@ Public Property Get DataRows(Optional OptionUseRowMode As Boolean) As Long
 '   OptionUseRowMode=True:  Returns the longest array size of values
 '                           plus row for keys (if they exist)
 '   OptionUseRowMode=False: Returns the count of the keys
-    DataRows = IIf(OptionUseRowMode, mDataShapeValues + Min(1, Me.Count), Me.Count)
+    DataRows = Iif(OptionUseRowMode, mDataShapeValues + Min(1, Me.Count), Me.Count)
 End Property
 
 'Returns the column count that would be returned by the GetData method
@@ -156,7 +156,7 @@ Public Property Get DataCols(Optional OptionUseRowMode As Boolean) As Long
 '   OptionUseRowMode=True:  Returns the count of the keys
 '   OptionUseRowMode=False: Returns the longest array size of values
 '                           plus 1 col for keys (if they exist)
-    DataCols = IIf(OptionUseRowMode, Me.Count, mDataShapeValues + Min(1, Me.Count))
+    DataCols = Iif(OptionUseRowMode, Me.Count, mDataShapeValues + Min(1, Me.Count))
 End Property
 
 
@@ -201,10 +201,21 @@ End Sub
 Public Sub AddBulk(ValueArray2D As Variant, _
                     Optional OptionUseRowMode As Boolean, _
                     Optional OptionCountKeys As Boolean, _
-                    Optional DefaultValue As Variant)
+                    Optional DefaultValue As Variant, _
+                    Optional HeadersIndex As Long = 1)
 '       OptionUseRowMode : Use the first row instead of column as keys
 '       OptionCountKeys  : The value is the number of times the key has been found
 '                          This will force OptionNoItemFail to True
+'       DefaultValue     : Set a default item value
+'       HeadersIndex     : Specify the header index or column
+
+'    If HeadersIndex > 1 Then
+'        If OptionUseRowMode Then
+'            ValueArray2D = SetHeaderRow(ValueArray2D, HeadersIndex)
+'        Else
+'            ValueArray2D = SetHeaderColumn(ValueArray2D, HeadersIndex)
+'        End If
+'    End If
 
     Dim i As Long       ' For loop tracking
     Dim j As Long       ' For loop tracking
@@ -221,7 +232,7 @@ Public Sub AddBulk(ValueArray2D As Variant, _
     If OptionUseRowMode Then
 '       Keys are column headers, add values by rows
         For i = 1 To c
-            k = ValueArray2D(1, i)
+            k = ValueArray2D(HeadersIndex, i)
             If OptionCountKeys Then
 '               Add a count for this key
                 v = Me.GetValue(k, 0) + 1
@@ -234,8 +245,11 @@ Public Sub AddBulk(ValueArray2D As Variant, _
                     Case Is > 2:
 '                       Add array of values from rows
                         ReDim v(r - 2)
-                        For j = 0 To r - 2
-                            v(j) = ValueArray2D(j + 2, i)
+                        For j = 0 To r - 1
+                            If j + 1 <> HeadersIndex Then
+                                v(j - Iif(j + 1 < HeadersIndex, 0, 1)) = _
+                                    ValueArray2D(j + 1, i)
+                            End If
                         Next j
                     Case Else
 '                       Default (no values)
@@ -251,7 +265,7 @@ Public Sub AddBulk(ValueArray2D As Variant, _
     Else
 '       Keys are row headers, add values by columns
         For i = 1 To r
-            k = ValueArray2D(i, 1)
+            k = ValueArray2D(i, HeadersIndex)
             If OptionCountKeys Then
                 v = Me.GetValue(k, 0) + 1
             Else
@@ -263,8 +277,11 @@ Public Sub AddBulk(ValueArray2D As Variant, _
                     Case Is > 2:
 '                       Add array of values from columns
                         ReDim v(c - 2)
-                        For j = 0 To c - 2
-                            v(j) = ValueArray2D(i, j + 2)
+                        For j = 0 To c - 1
+                            If j + 1 <> HeadersIndex Then
+                                v(j - Iif(j + 1 < HeadersIndex, 0, 1)) = _
+                                    ValueArray2D(i, j + 1)
+                            End If
                         Next j
                     Case Else
 '                       Default (no values)
@@ -433,5 +450,5 @@ End Function
 
 'Returns the smaller of the two passed in values
 Private Function Min(a, b)
-    Min = IIf(a < b, a, b)
+    Min = Iif(a < b, a, b)
 End Function
