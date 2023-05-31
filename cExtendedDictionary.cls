@@ -209,14 +209,6 @@ Public Sub AddBulk(ValueArray2D As Variant, _
 '       DefaultValue     : Set a default item value
 '       HeadersIndex     : Specify the header index or column
 
-'    If HeadersIndex > 1 Then
-'        If OptionUseRowMode Then
-'            ValueArray2D = SetHeaderRow(ValueArray2D, HeadersIndex)
-'        Else
-'            ValueArray2D = SetHeaderColumn(ValueArray2D, HeadersIndex)
-'        End If
-'    End If
-
     Dim i As Long       ' For loop tracking
     Dim j As Long       ' For loop tracking
     Dim r As Long       ' Number of rows
