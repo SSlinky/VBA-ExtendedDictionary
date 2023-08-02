@@ -9,6 +9,10 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+' Copyright (C) 2023 Samuel Vanderslink
+' Permission granted under the MIT Open Source licence.
+' The above copyright notice shall be included in all
+' copies or substantial portions of the Software.
 
 ' ------------------------------------------------
 '   Dictionary wrapper class to extend standard
@@ -16,7 +20,7 @@ Option Explicit
 '
 '   Author : Sam Vanderslink
 '   Web    : notis.net.au
-'   Licence: GNU GPLv3 (open source)
+'   Licence: MIT (open source)
 ' ------------------------------------------------
 
 
