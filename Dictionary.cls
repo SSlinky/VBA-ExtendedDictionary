@@ -435,8 +435,9 @@ Attribute NArrayDimensions.VB_Description = "Returns the number of dimensions fo
     Loop
     
 Result:
+'   Expect to catch a Type mismatch exception.
 '   Expect to catch a Subscript out of range exception.
-    If Err = 9 Then NArrayDimensions = i - 1 Else Err.Raise Err
+    If Err = 13 Or Err = 9 Then NArrayDimensions = i - 1 Else Err.Raise Err
 End Function
 
 Private Sub MetaTrackingAdd(val As Variant)
