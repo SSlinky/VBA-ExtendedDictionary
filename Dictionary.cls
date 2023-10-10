@@ -76,14 +76,13 @@ Public Property Get OptionNoItemFail() As Boolean
     OptionNoItemFail = mOptionNoItemFail
 End Property
 
-Private mCompareMode As CompareModeType
 Public Property Let CompareMode(var As CompareModeType)
 Attribute CompareMode.VB_Description = "Sets the compare mode for the dictionary."
 '   Sets the compare mode for the dictionary.
 '
 '   A value representing the comparison mode used by functions such
 '   as StrComp. Can only be changed while the dictionary has no data.
-    mBaseDict.CompareMode = CompareM
+    mBaseDict.CompareMode = var
 End Property
 
 Public Property Get CompareMode() As CompareModeType
@@ -447,9 +446,10 @@ Attribute MetaTrackingAdd.VB_Description = "Tracks the largest sized value array
 '   Args:
 '       val: The value being added.
 '
+    Dim valSize As Long
     valSize = GetValueOrArraySize(val)
     If valSize > mLargestValueSize Then
-        mLargestValueSize = valSizeLongMin
+        mLargestValueSize = valSize
     End If
 End Sub
 
