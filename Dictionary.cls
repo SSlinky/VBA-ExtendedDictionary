@@ -384,7 +384,7 @@ End Function
 
 ' Helpers
 '-------------------------------------------------------------------------------
-Private Function GetDataValues(arr As Variant, idx As Long, hdr As Long) As Variant
+Private Function GetDataValues(arr As Variant, rIdx As Long, hIdx As Long) As Variant
 Attribute GetDataValues.VB_Description = "Returns a 1D array of values from the data."
 '   Returns a 1D array of values from the data.
 '
@@ -402,7 +402,7 @@ Attribute GetDataValues.VB_Description = "Returns a 1D array of values from the 
     Dim i As Long
     For i = 1 To UBound(arr, 2)
         If i + 1 <> hIdx Then
-            result(i - Iif(j + 1 < hIdx, 0, 1)) = arr(rIdx, i)
+            result(i - Iif(i + 1 < hIdx, 0, 1)) = arr(rIdx, i)
         End If
     Next i
 
@@ -453,12 +453,12 @@ Attribute MetaTrackingAdd.VB_Description = "Tracks the largest sized value array
     End If
 End Sub
 
-Private Sub MetaTrackingRemove(val As Variant)
+Private Sub MetaTrackingRemove(remVal As Variant)
 Attribute MetaTrackingRemove.VB_Description = "Tracks the largest sized value array when removing a key from the dictionary."
 '   Tracks the largest sized value array when removing a key from the dictionary.
 '
 '   Args:
-'       val: The value being removed.
+'       remVal: The value being removed.
 '
 '   Shortcut for when we have no values.
     If Count = 0 Then
@@ -479,7 +479,7 @@ Attribute MetaTrackingRemove.VB_Description = "Tracks the largest sized value ar
         valSize = GetValueOrArraySize(val)
         
 '       Shortcut if next largest is the same as value we're untracking.
-        If valSize = remValSize Then
+        If valSize = removedValSize Then
             mLargestValueSize = valSize
             Exit Sub
         End If
