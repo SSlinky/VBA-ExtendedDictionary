@@ -401,8 +401,8 @@ Attribute GetDataValues.VB_Description = "Returns a 1D array of values from the 
     
     Dim i As Long
     For i = 1 To UBound(arr, 2)
-        If i + 1 <> hIdx Then
-            result(i - Iif(i + 1 < hIdx, 0, 1)) = arr(rIdx, i)
+        If i <> hIdx Then
+            Result(i - IIf(i < hIdx, 1, 2)) = arr(rIdx, i)
         End If
     Next i
 
