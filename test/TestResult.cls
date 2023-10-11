@@ -39,3 +39,16 @@ Option Explicit
 Public Name As String
 Public Failed As Boolean
 Public Message As String
+
+Public Sub SetExpectedActualMessage(exp As String, act As String, Optional forVal As String)
+Attribute SetExpectedActualMessage.VB_Description = "Sets a message based on expected vs actual values."
+'   Sets a message based on expected vs actual values.
+'
+'   Args:
+'       exp: The expected value.
+'       act: The actual value.
+'
+    Dim msg As String
+    msg = "Expected " & exp & " but got " & act
+    Message = Iif(forVal = "", msg, msg & " for " & forVal)
+End Function
