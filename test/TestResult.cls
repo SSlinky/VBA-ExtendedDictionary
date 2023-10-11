@@ -65,6 +65,28 @@ Attribute AssertAreEqual.VB_Description = "Asserts expected is equal to actual."
     AssertAreEqual = Failed
 End Function
 
+Public Function AssertAreNotEqual( _
+    expectedVal, _
+    actualVal, _
+    Optional forVal As String) As Boolean
+Attribute AssertAreNotEqual.VB_Description = "Asserts values are not equal."
+'   Asserts values are not equal.
+'
+'   Args:
+'       expectedVal: The expected value.
+'       actualVal: The actual value.
+'       forVal: Additional context.
+'
+'   Returns:
+'       False if the assertion passed.
+'
+    If expectedVal = actualVal Then
+        Failed = True
+        Message "Inequality check [" & forVal & "]"
+    End If
+    AssertAreEqual = Failed
+End Function
+
 Public Function AssertIsTrue(val As Boolean, ctx As String) As Boolean
 Attribute AssertIsTrue.VB_Description = "Asserts the value is true."
 '   Asserts the value is true.
