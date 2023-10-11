@@ -115,8 +115,7 @@ Attribute AssertNoException.VB_Description = "Asserts no exception raised."
 '
     If Err <> 0 Then
         Failed = True
-        Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
+        Message = Err & " - " & Err.Description
     End If
 
     AssertNoException = Failed

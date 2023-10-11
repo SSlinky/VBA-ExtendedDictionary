@@ -323,8 +323,8 @@ Attribute TestDictionary_ItemReturnsItem.VB_Description = "Tests the default and
     d.Add INPKEYB, EXPRESB
 
 '   Assert
-    If tr.AssertAreEqual(EXPRESA, d.Item(INPKEYA), INPKEYA) Then Exit For
-    If tr.AssertAreEqual(EXPRESB, d(INPKEYB), INPKEYB) Then Exit For
+    If tr.AssertAreEqual(EXPRESA, d.Item(INPKEYA), INPKEYA) Then GoTo Finally
+    If tr.AssertAreEqual(EXPRESB, d(INPKEYB), INPKEYB) Then GoTo Finally
 
 Finally:
     Set TestDictionary_ItemReturnsItem = tr
