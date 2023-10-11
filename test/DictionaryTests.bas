@@ -359,7 +359,6 @@ End Function
 Private Function TestDictionary_ItemReturnsItem() As TestResult
 Attribute TestDictionary_ItemReturnsItem.VB_Description = "Tests the default and explicit item return."
 '   Tests the default and explicit item return.
-'
     Dim tr As New TestResult
 
 '   Arrange
@@ -397,11 +396,11 @@ End Function
 Private Function TestDictionary_Exists() As TestResult
 Attribute TestDictionary_Exists.VB_Description = "Tests Exists property works positively and negatively."
 '   Tests Exists property works positively and negatively.
-     Dim tr As New TestResult
-    Const INPKEYA As String = "A"
-    Const INPKEYB As String = "B"
+    Dim tr As New TestResult
 
 '   Arrange
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
     Dim d As New Dictionary
     d.Add INPKEYA, Nothing
 
@@ -432,7 +431,7 @@ End Function
 Private Function TestDictionary_GetItemsReturnsAllItems() As TestResult
 Attribute TestDictionary_GetItemsReturnsAllItems.VB_Description = "Test Items returns all items."
 '   Test Items returns all items.
-     Dim tr As New TestResult
+    Dim tr As New TestResult
 
 '   Arrange
     Const EXPRESA As String = "A Result"
@@ -469,7 +468,7 @@ End Function
 Private Function TestDictionary_GetKeysReturnsKeys() As TestResult
 Attribute TestDictionary_GetKeysReturnsKeys.VB_Description = "Test Keys returns all keys."
 '   Test Keys returns all keys.
-     Dim tr As New TestResult
+    Dim tr As New TestResult
 
 '   Arrange
     Const INPKEYA As String = "A"
@@ -504,7 +503,7 @@ End Function
 Private Function TestDictionary_GetDataReturnsData() As TestResult
 Attribute TestDictionary_GetDataReturnsData.VB_Description = "Test data out matches data in."
 '   Test data out matches data in.
-     Dim tr As New TestResult
+    Dim tr As New TestResult
 
 '   Arrange
     Dim bulkData() As Variant
