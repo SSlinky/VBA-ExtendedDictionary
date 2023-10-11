@@ -198,6 +198,121 @@ Finally:
     Set TestDictionary_AddBulkColMode = tr
 End Function
 
+Private Function TestDictionary_AddBulkRowMode() As TestResult
+Attribute TestDictionary_AddBulkRowMode.VB_Description = "Add bulk items to the dictionary."
+'   Add bulk items to the dictionary.
+    Dim tr As New TestResult
+
+'   Arrange
+    Dim bulkData() As Variant
+    ReDim bulkData(1 To 3, 1 To 4)
+
+    Const HDRS As String = "ABC"
+    Const VALS As String = " 123"
+
+    Dim i As Long
+    For i = 1 To UBound(bulkData, 1)
+        Dim j As Long
+        For j = 1 To UBound(bulkData, 2)
+            If j = 1 Then
+                bulkData(i, j) = Mid(HDRS, i, 1)
+            Else
+                bulkData(i, j) = Mid(HDRS, i, 1) & Mid(VALS, j, 1)
+            End If
+        Next j
+    Next i
+
+    Dim d As New Dictionary
+
+'   Act
+    On Error Resume Next
+    d.AddBulk Application.Transpose(bulkData), OptionUseRowMode:=True
+
+'   Assert
+    If Err <> 0 Then
+        tr.Failed = True
+        tr.Message = "Exception unexpected: " _
+            & Err & " - " & Err.Description
+        GoTo Finally
+    End If
+    On Error GoTo 0
+
+    If d.Count <> Len(HDRS) Then
+        tr.Failed = True
+        tr.Message = "Expected count " & HDRS & " but got " & d.Count
+        GoTo Finally
+    End If
+
+    For i = 1 To UBound(bulkData, 1)
+        For j = 2 To UBound(bulkData, 2)
+            If d(bulkData(i, 1))(j - 2) <> bulkData(i, j) Then
+                tr.Failed = True
+                tr.Message = "Dictionary data failed validation."
+            End If
+        Next j
+    Next i
+
+Finally:
+    Set TestDictionary_AddBulkRowMode = tr
+End Function
+
+Private Function TestDictionary_AddBulkCountKeys() As TestResult
+Attribute TestDictionary_AddBulkCountKeys.VB_Description = "Add bulk items to the dictionary."
+'   Add bulk items to the dictionary.
+    Dim tr As New TestResult
+
+'   Arrange
+    Dim bulkData() As Variant
+    ReDim bulkData(1 To 6, 1 To 1)
+
+    Const HDRS As String = "ABC"
+    Const VALS As String = "123"
+
+    Dim i As Long
+    For i = 1 To Len(HDRS)
+        Dim j As Long
+        For j = 1 To CLng(Mid(VALS, i, 1))
+            Dim n As Long
+            n = n + 1
+            bulkData(n, 1) = Mid(HDRS, i, 1)
+        Next j
+    Next i
+
+    Dim d As New Dictionary
+
+'   Act
+    On Error Resume Next
+    d.AddBulk bulkData, OptionCountKeys:=True
+
+'   Assert
+    If Err <> 0 Then
+        tr.Failed = True
+        tr.Message = "Exception unexpected: " _
+            & Err & " - " & Err.Description
+        GoTo Finally
+    End If
+    On Error GoTo 0
+
+    If d.Count <> Len(HDRS) Then
+        tr.Failed = True
+        tr.Message = "Expected count " & HDRS & " but got " & d.Count
+        GoTo Finally
+    End If
+
+    For i = 1 To Len(HDRS)
+        Dim h As String, v As Long
+        h = Mid(HDRS, i, 1)
+        v = CLng(Mid(VALS, i, 1))
+        If d(h) <> v Then
+            tr.Failed = True
+            tr.Message = "Expected " & v &" for " & h & " but got " & d(h) & "."
+        End If
+    Next i
+
+Finally:
+    Set TestDictionary_AddBulkCountKeys = tr
+End Function
+
 Private Function TestDictionary_CountItems() As TestResult
 Attribute TestDictionary_CountItems.VB_Description = "Tests the Count property of the dictionary."
 '   Tests the Count property of the dictionary.
