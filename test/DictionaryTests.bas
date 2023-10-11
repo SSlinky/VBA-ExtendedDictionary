@@ -578,3 +578,70 @@ Attribute TestDictionary_DataRowsAndColsCorrect.VB_Description = "Tests the Data
 Finally:
     Set TestDictionary_DataRowsAndColsCorrect = tr
 End Function
+
+Private Function TestDictionary_RemoveRemovesKey() As TestResult
+Attribute TestDictionary_RemoveRemovesKey.VB_Description = "Test that remove removes the key."
+'   Test that remove removes the key.
+    Dim tr As New TestResult
+
+'   Arrange
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
+    
+    Dim d As New Dictionary
+    d.Add INPKEYA, Nothing
+    d.Add INPKEYB, Nothing
+
+'   Act
+    d.Remove(INPKEYA)
+
+'   Assert
+    On Error Resume Next
+    If tr.AssertIsFalse(d.Exists(INPKEYA), "key A exists") Then GoTo Finally
+    If tr.AssertIsTrue(d.Exists(INPKEYB), "key B exists") Then GoTo Finally
+    If tr.AssertNoException() Then GoTo Finally
+
+Finally:
+    On Error GoTo 0
+    Set TestDictionary_RemoveRemovesKey = tr
+End Function
+
+Private Function TestDictionary_RemoveUpdatesMeta() As TestResult
+Attribute TestDictionary_RemoveUpdatesMeta.VB_Description = "Test that remove updates meta tracking."
+'   Test that remove updates meta tracking.
+    Dim tr As New TestResult
+
+'   Arrange
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
+
+    Dim inpValA() As Variant
+    inpValA = Array(1, 2)
+
+    Dim inpValB() As Variant
+    inpValB = Array(1, 2, 3, 4)
+
+    Dim d As New Dictionary
+    d.Add INPKEYA, inpValA
+    d.Add INPKEYB, inpValB
+
+'   Act
+    Dim beforeRemoveColCount As Long
+    beforeRemoveColCount = d.DataCols()
+
+    d.Remove INPKEYA
+
+    Dim afterRemoveColCount As Long
+    afterRemoveColCount = d.DataCols()
+
+'   Assert
+    On Error Resume Next
+    If tr.AssertAreNotEqual(beforeRemoveColCount, afterRemoveColCount, "row counts") Then GoTo Finally
+    If tr.AssertAreEqual(UBound(inpValB) + 2, beforeRemoveColCount) Then GoTo Finally
+    If tr.AssertAreEqual(UBound(inpValA) + 2, afterRemoveColCount) Then GoTo Finally
+    If tr.AssertNoException() Then GoTo Finally
+
+Finally:
+    On Error GoTo 0
+    Set TestDictionary_RemoveUpdatesMeta = tr
+End Function
