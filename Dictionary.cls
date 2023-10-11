@@ -349,29 +349,29 @@ Attribute GetData.VB_Description = "Returns the dictionary data as a 2D array wi
     Dim arrVals As Variant
     arrVals = mBaseDict.Items()
 
-    Dim dataRows As Long
-    dataRows = Me.DataRows()
+    Dim dataRowCount As Long
+    dataRowCount = Me.DataRows()
     
-    Dim dataCols As Long
-    dataCols = Me.DataCols()
+    Dim dataColCount As Long
+    dataColCount = Me.DataCols()
     
 '   Set up results array in the shape of the keys and values
 '   adding an additional column to fit the keys as a column
     Dim results() As Variant
-    ReDim results(1 To dataRows, _
-                  1 To dataCols)
+    ReDim results(1 To dataRowCount, _
+                  1 To dataColCount)
 
 '   Populate the row(s) and column(s)
     Dim r As Long
-    For r = 1 To dataRows
+    For r = 1 To dataRowCount
         results(r, 1) = arrKeys(r - 1)
-        If dataCols > 2 Then
+        If dataColCount > 2 Then
 '           Populate columns for multi-column
             Dim c As Long
-            For c = 2 To dataCols
+            For c = 2 To dataColCount
                 results(r, c) = arrVals(r - 1)(c - 2)
             Next c
-        ElseIf dataCols = 2 Then
+        ElseIf dataColCount = 2 Then
 '           Populate single value
             results(r, 2) = arrVals(r - 1)
         End If
