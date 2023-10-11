@@ -597,3 +597,129 @@ Attribute TestDictionary_OptionNoItemFailOverwrites.VB_Description = "OptionNoIt
 Finally:
     Set TestDictionary_OptionNoItemFailOverwrites = tr
 End Function
+
+' TODO: Investigate!
+'   Error handling in the Dictionary class seems to be messing with
+'   error handling in the test scope. Exceptions thrown by the dictionary
+'   do not seem to be caught (as they should) at this level.
+
+' Private Function TestDictionary_NoOptionNoItemFailThrows() As TestResult
+' Attribute TestDictionary_NoOptionNoItemFailThrows.VB_Description = "Without OptionNoItemFail throws rather than overwriting."
+' '   Without OptionNoItemFail throws rather than overwriting.
+'     Dim tr As New TestResult
+
+' '   Arrange
+'     Const INPKEYA As String = "A"
+'     Const INPVALA As String = "A Value"
+'     Const INPVALB As String = "A Value"
+    
+' '   Act
+'     Dim d As New Dictionary
+'     d.OptionNoItemFail = False
+
+'     On Error Resume Next
+'     d.Add INPKEYA, INPVALA
+'     d.Add INPKEYA, INPVALB
+
+' '   Assert
+'     If Err = 0 Then
+'         tr.Failed = True
+'         tr.Message = "Exception expected but did not throw"
+'         GoTo Finally
+'     End If
+'     On Error GoTo 0
+
+'     If d.Count <> 1 Then
+'         tr.Failed = True
+'         tr.Message = "Expected count 1 but got " & d.Count
+'         GoTo Finally
+'     End If
+
+'     If d(INPKEYA) <> INPVALA Then
+'         tr.Failed = True
+'         tr.Message = "Expected " & INPVALA &" for " & INPKEYA & _
+'             " but got " & d(INPKEYA) & "."
+'         GoTo Finally
+'     End If
+
+' Finally:
+'     Set TestDictionary_NoOptionNoItemFailThrows = tr
+' End Function
+
+Private Function TestDictionary_DataRowsAndColsCorrect() As TestResult
+Attribute TestDictionary_DataRowsAndColsCorrect.VB_Description = "Tests the DataRows and DataCols properties."
+'   Tests the DataRows and DataCols properties.
+    Dim tr As New TestResult
+
+'   Arrange
+    Dim bulkData() As Variant
+    ReDim bulkData(1 To 3, 1 To 4)
+
+    Const HDRS As String = "ABC"
+    Const VALS As String = " 123"
+
+    Dim i As Long
+    For i = 1 To UBound(bulkData, 1)
+        Dim j As Long
+        For j = 1 To UBound(bulkData, 2)
+            If j = 1 Then
+                bulkData(i, j) = Mid(HDRS, i, 1)
+            Else
+                bulkData(i, j) = Mid(HDRS, i, 1) & Mid(VALS, j, 1)
+            End If
+        Next j
+    Next i
+
+    On Error Resume Next
+    Dim d As New Dictionary
+    d.AddBulk bulkData
+
+'   Act
+    Dim dRowsColMode As Long
+    dRowsColMode = d.DataRows()
+
+    Dim dColsColMode As Long
+    dColsColMode = d.DataCols()
+
+    Dim dRowsRowMode As Long
+    dRowsRowMode = d.DataRows(OptionUseRowMode:=True)
+
+    Dim dColsRowMode As Long
+    dColsRowMode = d.DataCols(OptionUseRowMode:=True)
+
+'   Assert
+    If Err <> 0 Then
+        tr.Failed = True
+        tr.Message = "Exception unexpected: " _
+            & Err & " - " & Err.Description
+        GoTo Finally
+    End If
+    On Error GoTo 0
+
+    If dRowsColMode <> UBound(bulkData, 1) Then
+        tr.Failed = True
+        tr.SetExpectedActualMessage UBound(bulkData, 1), CStr(dRowsColMode)
+        GoTo Finally
+    End If
+
+    If dColsColMode <> UBound(bulkData, 2) Then
+        tr.Failed = True
+        tr.SetExpectedActualMessage UBound(bulkData, 2), CStr(dColsColMode)
+        GoTo Finally
+    End If
+
+    If dRowsRowMode <> UBound(bulkData, 2) Then
+        tr.Failed = True
+        tr.SetExpectedActualMessage UBound(bulkData, 2), CStr(dRowsRowMode)
+        GoTo Finally
+    End If
+
+    If dColsRowMode <> UBound(bulkData, 1) Then
+        tr.Failed = True
+        tr.SetExpectedActualMessage UBound(bulkData, 1), CStr(dColsRowMode)
+        GoTo Finally
+    End If
+
+Finally:
+    Set TestDictionary_DataRowsAndColsCorrect = tr
+End Function
