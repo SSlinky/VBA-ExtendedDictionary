@@ -598,8 +598,8 @@ Finally:
 End Function
 
 Private Function TestDictionary_RemoveUpdatesMeta() As TestResult
-Attribute TestDictionary_RemoveUpdatesMeta.VB_Description = "Test that remove updates meta tracking."
-'   Test that remove updates meta tracking.
+Attribute TestDictionary_RemoveUpdatesMeta.VB_Description = "Github issue #3 Array tracking when largest element is removed."
+'   Github issue #3 Array tracking when largest element is removed.
     Dim tr As New TestResult
 
 '   Arrange
