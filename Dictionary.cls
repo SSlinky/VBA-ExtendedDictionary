@@ -367,9 +367,12 @@ Attribute GetData.VB_Description = "Returns the dictionary data as a 2D array wi
         results(r, 1) = arrKeys(r - 1)
         If dataColCount > 2 Then
 '           Populate columns for multi-column
+            Dim maxCols As Long
+            maxCols = UBound(arrVals(r - 1)) + 2
             Dim c As Long
             For c = 2 To dataColCount
                 results(r, c) = arrVals(r - 1)(c - 2)
+                If c = maxCols Then Exit For
             Next c
         ElseIf dataColCount = 2 Then
 '           Populate single value
