@@ -620,7 +620,7 @@ Attribute TestDictionary_RemoveUpdatesMeta.VB_Description = "Test that remove up
     Dim beforeRemoveColCount As Long
     beforeRemoveColCount = d.DataCols()
 
-    d.Remove INPKEYA
+    d.Remove INPKEYB
 
     Dim afterRemoveColCount As Long
     afterRemoveColCount = d.DataCols()
