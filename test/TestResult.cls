@@ -43,7 +43,9 @@ Public Message As String
 Public Property Get ToString() As String
 Attribute ToString.VB_Description = "Returns a string representation of the class."
 '   Returns a string representation of the class.
-    ToString = Iif(Failed, "!! Fail: ", "   Pass: ") & Name & Trim(" " & Message)
+    Dim msg As String
+    msg = Iif(Message = "", "", vbNewLine & "     " & Message)
+    ToString = Iif(Failed, "!! Fail: ", "   Pass: ") & Name & msg
 End Property
 
 
