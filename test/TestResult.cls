@@ -82,9 +82,9 @@ Attribute AssertAreNotEqual.VB_Description = "Asserts values are not equal."
 '
     If expectedVal = actualVal Then
         Failed = True
-        Message "Inequality check [" & forVal & "]"
+        Message = "Inequality check [" & forVal & "]"
     End If
-    AssertAreEqual = Failed
+    AssertAreNotEqual = Failed
 End Function
 
 Public Function AssertIsTrue(val As Boolean, ctx As String) As Boolean
@@ -180,4 +180,4 @@ Attribute SetExpectedActualMessage.VB_Description = "Sets a message based on exp
     Dim msg As String
     msg = "Expected " & exp & " but got " & act
     Message = Iif(forVal = "", msg, msg & " [" & forVal & "]")
-End Function
+End Sub
