@@ -469,7 +469,7 @@ Attribute TestDictionary_OptionNoItemFailOverwrites.VB_Description = "OptionNoIt
 '   Arrange
     Const INPKEYA As String = "A"
     Const INPVALA As String = "A Value"
-    Const INPVALB As String = "A Value"
+    Const INPVALB As String = "Visibly different value to A"
     
 '   Act
     Dim d As New Dictionary
