@@ -274,6 +274,53 @@ Finally:
     Set TestDictionary_AddBulkCountKeys = tr
 End Function
 
+Private Function TestDictionary_AddBulkCountKeysRowMode() As TestResult
+Attribute TestDictionary_AddBulkCountKeysRowMode.VB_Description = "Github issue #4 Counting keys using row mode errors with duplicate key."
+'   Github issue #4 Counting keys using row mode errors with duplicate key.
+    Dim tr As New TestResult
+
+'   Arrange
+    Dim bulkData() As Variant
+    ReDim bulkData(1 To 6, 1 To 1)
+
+    Const HDRS As String = "ABC"
+    Const VALS As String = "123"
+
+    Dim i As Long
+    For i = 1 To Len(HDRS)
+        Dim j As Long
+        For j = 1 To CLng(Mid(VALS, i, 1))
+            Dim n As Long
+            n = n + 1
+            bulkData(n, 1) = Mid(HDRS, i, 1)
+        Next j
+    Next i
+
+    Dim d As New Dictionary
+
+'   Act
+    On Error Resume Next
+    d.AddBulk Application.Transpose(bulkData), _
+        OptionCountKeys:=True, _
+        OptionUseRowMode:=True
+
+'   Assert
+    If tr.AssertNoException() Then GoTo Finally
+    On Error GoTo 0
+
+    If tr.AssertAreEqual(Len(HDRS), d.Count, "count keys") Then GoTo Finally
+
+    For i = 1 To Len(HDRS)
+        Dim h As String, v As Long
+        h = Mid(HDRS, i, 1)
+        v = CLng(Mid(VALS, i, 1))
+        If tr.AssertAreEqual(v, d(h), h) Then Exit For
+    Next i
+
+Finally:
+    Set TestDictionary_AddBulkCountKeysRowMode = tr
+End Function
+
 Private Function TestDictionary_CountItems() As TestResult
 Attribute TestDictionary_CountItems.VB_Description = "Tests the Count property of the dictionary."
 '   Tests the Count property of the dictionary.
@@ -635,4 +682,55 @@ Attribute TestDictionary_RemoveUpdatesMeta.VB_Description = "Github issue #3 Arr
 Finally:
     On Error GoTo 0
     Set TestDictionary_RemoveUpdatesMeta = tr
+End Function
+
+Private Function TestDictionary_ExistWorksWithInteger() As TestResult
+Attribute TestDictionary_ExistWorksWithInteger.VB_Description = "Github Issue #5 Integer keys are never found with .Exists method."
+'   Github Issue #5 Integer keys are never found with .Exists method.
+    Dim tr As New TestResult
+
+'   Arrange
+    Dim d As New Dictionary
+    d.Add 0, Nothing
+
+'   Act
+    Dim result As Boolean
+    result = d.Exists(0)
+
+'   Assert
+    If tr.AssertIsTrue(result, "result exists") Then GoTo Finally
+
+
+Finally:
+    Set TestDictionary_ExistWorksWithInteger = tr
+End Function
+
+Private Function TestDictionary_GetDataWorksWithVariableArrays() As TestResult
+Attribute TestDictionary_GetDataWorksWithVariableArrays.VB_Description = "Github issue #2 Unexpected value array sizes can cause GetData to raise out of bounds error."
+'   Github issue #2 Unexpected value array sizes can cause GetData to raise out of bounds error.
+    Dim tr As New TestResult
+
+'   Arrange
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
+
+    Dim inpValA() As Variant
+    inpValA = Array(1, 2)
+
+    Dim inpValB() As Variant
+    inpValB = Array(1, 2, 3, 4)
+
+    Dim d As New Dictionary
+    d.Add INPKEYA, inpValA
+    d.Add INPKEYB, inpValB
+
+'   Act
+    Dim results() As Variant
+    results = d.GetData()
+
+'   Assert
+    If tr.AssertAreEqual(UBound(inpValB) + 2, UBound(results, 2)) Then GoTo Finally
+
+Finally:
+    Set TestDictionary_GetDataWorksWithVariableArrays = tr
 End Function
