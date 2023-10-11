@@ -209,7 +209,11 @@ Attribute Remove.VB_Description = "Removes a key from the Scripting.Dictionary."
 '       Key: The key to remove.
 '
     Dim val As Variant
-    val = Me.Item(Key)
+    If IsObject(Me.Item(Key)) Then
+        Set val = Me.Item(Key)
+    Else
+        val = Me.Item(Key)
+    End If
     mBaseDict.Remove Key
     MetaTrackingRemove val
 End Sub
