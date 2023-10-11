@@ -40,7 +40,115 @@ Public Name As String
 Public Failed As Boolean
 Public Message As String
 
-Public Sub SetExpectedActualMessage(exp As String, act As String, Optional forVal As String)
+
+' Methods
+'-------------------------------------------------------------------------------
+Public Function AssertAreEqual( _
+    expectedVal, _
+    actualVal, _
+    Optional forVal As String) As Boolean
+Attribute AssertAreEqual.VB_Description = "Asserts expected is equal to actual."
+'   Asserts expected is equal to actual.
+'
+'   Args:
+'       expectedVal: The expected value.
+'       actualVal: The actual value.
+'       forVal: Additional context.
+'
+'   Returns:
+'       False if the assertion passed.
+'
+    If expectedVal <> actualVal Then
+        Failed = True
+        SetExpectedActualMessage CStr(expectedVal), CStr(actualVal)
+    End If
+    AssertAreEqual = Failed
+End Function
+
+Public Function AssertIsTrue(val As Boolean, ctx As String) As Boolean
+Attribute AssertIsTrue.VB_Description = "Asserts the value is true."
+'   Asserts the value is true.
+'
+'   Args:
+'       val: The value to test.
+'       ctx: Context for the message.
+'
+'   Returns:
+'       False if the assertion passed.
+'
+    If Not val Then
+        Failed = True
+        Message = "Failed " & ctx
+    End If
+
+    AssertIsTrue = Failed
+End Function
+
+Public Function AssertIsFalse(val As Boolean, ctx As String) As Boolean
+Attribute AssertIsFalse.VB_Description = "Asserts the value is false."
+'   Asserts the value is false.
+'
+'   Args:
+'       val: The value to test.
+'       ctx: Context for the message.
+'
+'   Returns:
+'       False if the assertion passed.
+'
+    If val Then
+        Failed = True
+        Message = "Failed " & ctx
+    End If
+
+    AssertIsFalse = Failed
+End Function
+
+Public Function AssertNoException() As Boolean
+Attribute AssertNoException.VB_Description = "Asserts no exception raised."
+'   Asserts no exception raised.
+'
+'   Args:
+'       errObj: The error object.
+'
+'   Returns:
+'       False if the assertion passed.
+'
+    If Err <> 0 Then
+        Failed = True
+        Message = "Exception unexpected: " _
+            & Err & " - " & Err.Description
+    End If
+
+    AssertNoException = Failed
+End Function
+
+Public Function AssertRaised(errNo As Long) As Boolean
+Attribute AssertRaises.VB_Description = "Asserts a specific exception is raised."
+'   Asserts a specific exception is raised.
+'
+'   Args:
+'       errNo: The expected exception.
+'
+'   Returns:
+'       False if the assertion passed.
+'
+    If Err = 0 Then
+        Failed = True
+        Message = "Expected exception " & errNo & " raised but none thrown."
+    End If
+    
+    If Err <> errNo Then
+        Failed = True
+        Message = "Expected exception " & errNo & " raised but got " & Err & "."
+    End If
+
+    AssertRaised = Failed
+End Function
+
+
+' Helpers
+'-------------------------------------------------------------------------------
+Private Sub SetExpectedActualMessage(exp As String, act As String, Optional forVal As String)
 Attribute SetExpectedActualMessage.VB_Description = "Sets a message based on expected vs actual values."
 '   Sets a message based on expected vs actual values.
 '
@@ -50,5 +158,5 @@ Attribute SetExpectedActualMessage.VB_Description = "Sets a message based on exp
 '
     Dim msg As String
     msg = "Expected " & exp & " but got " & act
-    Message = Iif(forVal = "", msg, msg & " for " & forVal)
+    Message = Iif(forVal = "", msg, msg & " [" & forVal & "]")
 End Function

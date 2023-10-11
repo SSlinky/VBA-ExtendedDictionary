@@ -127,27 +127,14 @@ Attribute TestDictionary_Add.VB_Description = "Add an item to the dictionary."
     d.Add ADDKEY, ADDVAL
 
 '   Assert
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertNoException() Then GoTo Finally
     On Error GoTo 0
 
-    If d.Count <> 1 Then
-        tr.Failed = True
-        tr.Message = "Expected count 1 but got " & d.Count
-        GoTo Finally
-    End If
-
-    If d(ADDKEY) <> ADDVAL Then
-        tr.Failed = True
-        tr.Message = "Expected count 1 but got " & d.Count
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(1, d.Count) Then GoTo Finally
+    If tr.AssertAreEqual(ADDVAL, d(ADDKEY)) Then GoTo Finally
 
 Finally:
+    On Error GoTo 0
     Set TestDictionary_Add = tr
 End Function
 
@@ -182,19 +169,10 @@ Attribute TestDictionary_AddBulkColMode.VB_Description = "Add bulk items to the 
     d.AddBulk bulkData
 
 '   Assert
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertNoException() Then GoTo Finally
     On Error GoTo 0
 
-    If d.Count <> Len(HDRS) Then
-        tr.Failed = True
-        tr.Message = "Expected count " & HDRS & " but got " & d.Count
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(Len(HDRS), d.Count) Then GoTo Finally
 
     For i = 1 To UBound(bulkData, 1)
         For j = 2 To UBound(bulkData, 2)
@@ -206,6 +184,7 @@ Attribute TestDictionary_AddBulkColMode.VB_Description = "Add bulk items to the 
     Next i
 
 Finally:
+    On Error GoTo 0
     Set TestDictionary_AddBulkColMode = tr
 End Function
 
@@ -240,19 +219,10 @@ Attribute TestDictionary_AddBulkRowMode.VB_Description = "Add bulk items to the 
     d.AddBulk Application.Transpose(bulkData), OptionUseRowMode:=True
 
 '   Assert
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertNoException() Then GoTo Finally
     On Error GoTo 0
 
-    If d.Count <> Len(HDRS) Then
-        tr.Failed = True
-        tr.Message = "Expected count " & HDRS & " but got " & d.Count
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(Len(HDRS), d.Count, "count headers") Then GoTo Finally
 
     For i = 1 To UBound(bulkData, 1)
         For j = 2 To UBound(bulkData, 2)
@@ -264,6 +234,7 @@ Attribute TestDictionary_AddBulkRowMode.VB_Description = "Add bulk items to the 
     Next i
 
 Finally:
+    On Error GoTo 0
     Set TestDictionary_AddBulkRowMode = tr
 End Function
 
@@ -296,28 +267,16 @@ Attribute TestDictionary_AddBulkCountKeys.VB_Description = "Add bulk items to th
     d.AddBulk bulkData, OptionCountKeys:=True
 
 '   Assert
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertNoException() Then GoTo Finally
     On Error GoTo 0
 
-    If d.Count <> Len(HDRS) Then
-        tr.Failed = True
-        tr.Message = "Expected count " & HDRS & " but got " & d.Count
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(Len(HDRS), d.Count, "count keys") Then GoTo Finally
 
     For i = 1 To Len(HDRS)
         Dim h As String, v As Long
         h = Mid(HDRS, i, 1)
         v = CLng(Mid(VALS, i, 1))
-        If d(h) <> v Then
-            tr.Failed = True
-            tr.Message = "Expected " & v &" for " & h & " but got " & d(h) & "."
-        End If
+        If tr.AssertAreEqual(v, d(h), h) Then Exit For
     Next i
 
 Finally:
@@ -335,21 +294,12 @@ Attribute TestDictionary_CountItems.VB_Description = "Tests the Count property o
 
 '   Act and Assert
     Dim d As New Dictionary
-    If d.Count <> 0 Then
-        tr.Failed = True
-        tr.Message = "Expected 0 count but got " & d.Count
-        GoTo Finally
-    End If
-
+    If tr.AssertAreEqual(0, d.Count, "count keys") Then GoTo Finally
 
     Dim i As Long
     For i = 1 To Len(ADDKEYS)
         d.Add Mid(ADDKEYS, i, 1), Nothing
-        If d.Count <> i Then
-            tr.Failed = True
-            tr.Message = "Expected " & i & " count but got " & d.Count
-            GoTo Finally
-        End If
+        If tr.AssertAreEqual(i, d.Count, "count keys at " & i) Then Exit For
     Next i
 
 Finally:
@@ -373,21 +323,8 @@ Attribute TestDictionary_ItemReturnsItem.VB_Description = "Tests the default and
     d.Add INPKEYB, EXPRESB
 
 '   Assert
-'   Test the Item method.
-    Dim result As String
-    result = d.Item(INPKEYA)
-    If Not result = EXPRESA Then
-        tr.Failed = True
-        tr.Message = "Expected " & EXPRESA & " but got " & result
-        GoTo Finally
-    End If
-
-'   Test the Item method (as default method).
-    result = d(INPKEYB)
-    If Not result = EXPRESB Then
-        tr.Failed = True
-        tr.Message = "Expected " & EXPRESB & " but got " & result
-    End If
+    If tr.AssertAreEqual(EXPRESA, d.Item(INPKEYA), INPKEYA) Then Exit For
+    If tr.AssertAreEqual(EXPRESB, d(INPKEYB), INPKEYB) Then Exit For
 
 Finally:
     Set TestDictionary_ItemReturnsItem = tr
@@ -412,17 +349,8 @@ Attribute TestDictionary_Exists.VB_Description = "Tests Exists property works po
     negResult = d.Exists(INPKEYB)
 
 '   Assert
-    If Not posResult Then
-        tr.Failed = True
-        tr.Message = "Failed positive check."
-        GoTo Finally
-    End If
-
-    If negResult Then
-        tr.Failed = True
-        tr.Message = "Failed negative check."
-        GoTo Finally
-    End If
+    If tr.AssertIsTrue(posResult, "positive check") Then GoTo Finally
+    If tr.AssertIsFalse(negResult, "negative check") Then GoTo Finally
 
 Finally:
     Set TestDictionary_Exists = tr
@@ -449,17 +377,9 @@ Attribute TestDictionary_GetItemsReturnsAllItems.VB_Description = "Test Items re
 
 '   Assert
     On Error Resume Next
-    If result(0) <> EXPRESA Or result(1) <> EXPRESB Then
-        tr.Failed = True
-        tr.Message = "Failed items check."
-        GoTo Finally
-    End If
-
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(EXPRESA, result(0), INPKEYA) Then GoTo Finally
+    If tr.AssertAreEqual(EXPRESB, result(1), INPKEYB) Then GoTo Finally
+    If tr.AssertNoException() Then GoTo Finally
 
 Finally:
     Set TestDictionary_GetItemsReturnsAllItems = tr
@@ -484,17 +404,9 @@ Attribute TestDictionary_GetKeysReturnsKeys.VB_Description = "Test Keys returns 
 
 '   Assert
     On Error Resume Next
-    If result(0) <> INPKEYA Or result(1) <> INPKEYB Then
-        tr.Failed = True
-        tr.Message = "Failed keys check."
-        GoTo Finally
-    End If
-
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(INPKEYA, result(0)) Then GoTo Finally
+    If tr.AssertAreEqual(INPKEYB, result(1)) Then GoTo Finally
+    If tr.AssertNoException() Then GoTo Finally
 
 Finally:
     Set TestDictionary_GetKeysReturnsKeys = tr
@@ -533,12 +445,7 @@ Attribute TestDictionary_GetDataReturnsData.VB_Description = "Test data out matc
     results = d.GetData()
 
 '   Assert
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertNoException() Then GoTo Finally
     On Error GoTo 0
 
     For i = 1 To UBound(bulkData, 1)
@@ -573,26 +480,11 @@ Attribute TestDictionary_OptionNoItemFailOverwrites.VB_Description = "OptionNoIt
     d.Add INPKEYA, INPVALB
 
 '   Assert
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertNoException() Then GoTo Finally
     On Error GoTo 0
 
-    If d.Count <> 1 Then
-        tr.Failed = True
-        tr.Message = "Expected count 1 but got " & d.Count
-        GoTo Finally
-    End If
-
-    If d(INPKEYA) <> INPVALB Then
-        tr.Failed = True
-        tr.Message = "Expected " & INPVALB &" for " & INPKEYA & _
-            " but got " & d(INPKEYA) & "."
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(1, d.Count, "count") Then GoTo Finally
+    If tr.AssertAreEqual(INPVALB, d(INPKEYA), INPKEYA) Then GoTo Finally
 
 Finally:
     Set TestDictionary_OptionNoItemFailOverwrites = tr
@@ -609,6 +501,7 @@ End Function
 '     Dim tr As New TestResult
 
 ' '   Arrange
+'     Const DUPLICATEKEYEX As Long = 457
 '     Const INPKEYA As String = "A"
 '     Const INPVALA As String = "A Value"
 '     Const INPVALB As String = "A Value"
@@ -617,30 +510,16 @@ End Function
 '     Dim d As New Dictionary
 '     d.OptionNoItemFail = False
 
-'     On Error Resume Next
 '     d.Add INPKEYA, INPVALA
+'     On Error Resume Next
 '     d.Add INPKEYA, INPVALB
 
 ' '   Assert
-'     If Err = 0 Then
-'         tr.Failed = True
-'         tr.Message = "Exception expected but did not throw"
-'         GoTo Finally
-'     End If
+'     If tr.AssertRaised(DUPLICATEKEYEX) Then GoTo Finally
 '     On Error GoTo 0
 
-'     If d.Count <> 1 Then
-'         tr.Failed = True
-'         tr.Message = "Expected count 1 but got " & d.Count
-'         GoTo Finally
-'     End If
-
-'     If d(INPKEYA) <> INPVALA Then
-'         tr.Failed = True
-'         tr.Message = "Expected " & INPVALA &" for " & INPKEYA & _
-'             " but got " & d(INPKEYA) & "."
-'         GoTo Finally
-'     End If
+'     If tr.AssertAreEqual(1, d.Count, "count") Then GoTo Finally
+'     If tr.AssertAreEqual(INPVALA, d(INPKEYA), INPKEYA) Then GoTo Finally
 
 ' Finally:
 '     Set TestDictionary_NoOptionNoItemFailThrows = tr
@@ -688,37 +567,13 @@ Attribute TestDictionary_DataRowsAndColsCorrect.VB_Description = "Tests the Data
     dColsRowMode = d.DataCols(OptionUseRowMode:=True)
 
 '   Assert
-    If Err <> 0 Then
-        tr.Failed = True
-        tr.Message = "Exception unexpected: " _
-            & Err & " - " & Err.Description
-        GoTo Finally
-    End If
+    If tr.AssertNoException() Then GoTo Finally
     On Error GoTo 0
 
-    If dRowsColMode <> UBound(bulkData, 1) Then
-        tr.Failed = True
-        tr.SetExpectedActualMessage UBound(bulkData, 1), CStr(dRowsColMode)
-        GoTo Finally
-    End If
-
-    If dColsColMode <> UBound(bulkData, 2) Then
-        tr.Failed = True
-        tr.SetExpectedActualMessage UBound(bulkData, 2), CStr(dColsColMode)
-        GoTo Finally
-    End If
-
-    If dRowsRowMode <> UBound(bulkData, 2) Then
-        tr.Failed = True
-        tr.SetExpectedActualMessage UBound(bulkData, 2), CStr(dRowsRowMode)
-        GoTo Finally
-    End If
-
-    If dColsRowMode <> UBound(bulkData, 1) Then
-        tr.Failed = True
-        tr.SetExpectedActualMessage UBound(bulkData, 1), CStr(dColsRowMode)
-        GoTo Finally
-    End If
+    If tr.AssertAreEqual(UBound(bulkData, 1), dRowsColMode) Then GoTo Finally
+    If tr.AssertAreEqual(UBound(bulkData, 2), dColsColMode) Then GoTo Finally
+    If tr.AssertAreEqual(UBound(bulkData, 2), dRowsRowMode) Then GoTo Finally
+    If tr.AssertAreEqual(UBound(bulkData, 1), dColsRowMode) Then GoTo Finally
 
 Finally:
     Set TestDictionary_DataRowsAndColsCorrect = tr
