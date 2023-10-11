@@ -42,8 +42,8 @@ Attribute RunTests.VB_Description = "Runs all tests."
     f = failTests.Count
 
     Debug.Print "-------------------------------------------"
-    Debug.Print " Passed: " & p & " (" & Format(p / (p + f), "0.00%)")
-    Debug.Print " Failed: " & f & " (" & Format(f / (p + f), "0.00%)")
+    Debug.Print "   Passed: " & p & " (" & Format(p / (p + f), "0.00%)")
+    Debug.Print "   Failed: " & f & " (" & Format(f / (p + f), "0.00%)")
     Debug.Print "-------------------------------------------"
     
 End Sub
@@ -51,12 +51,7 @@ End Sub
 Sub RunSingle()
     Dim tr As TestResult
     Set tr = TestDictionary_ItemReturnsItem()
-    
-    If tr.Failed Then
-        Debug.Print "FAIL: " & tr.Name, tr.Message
-    Else
-        Debug.Print "PASS"
-    End If
+    Debug.Print tr.ToString
 End Sub
 
 Private Sub RunTest(testName As String)
@@ -69,13 +64,9 @@ Attribute RunTest.VB_Description = "Runs the named test and stores the result."
     Dim tr As TestResult
     Set tr = Application.Run(testName)
     tr.Name = testName
-    
-    If tr.Failed Then
-        failTests.Add tr
-        Debug.Print "FAIL: " & tr.Name, tr.Message
-    Else
-        passTests.Add tr
-    End If
+    Debug.Print tr.ToString
+
+    If tr.Failed Then failTests.Add tr Else passTests.Add tr
 End Sub
 
 Private Function GetTestNames() As Collection
