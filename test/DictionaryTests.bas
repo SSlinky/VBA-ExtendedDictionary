@@ -553,3 +553,47 @@ Attribute TestDictionary_GetDataReturnsData.VB_Description = "Test data out matc
 Finally:
     Set TestDictionary_GetDataReturnsData = tr
 End Function
+
+Private Function TestDictionary_OptionNoItemFailOverwrites() As TestResult
+Attribute TestDictionary_OptionNoItemFailOverwrites.VB_Description = "OptionNoItemFail overwrites rather than throwing."
+'   OptionNoItemFail overwrites rather than throwing.
+    Dim tr As New TestResult
+
+'   Arrange
+    Const INPKEYA As String = "A"
+    Const INPVALA As String = "A Value"
+    Const INPVALB As String = "A Value"
+    
+'   Act
+    Dim d As New Dictionary
+    d.OptionNoItemFail = True
+
+    On Error Resume Next
+    d.Add INPKEYA, INPVALA
+    d.Add INPKEYA, INPVALB
+
+'   Assert
+    If Err <> 0 Then
+        tr.Failed = True
+        tr.Message = "Exception unexpected: " _
+            & Err & " - " & Err.Description
+        GoTo Finally
+    End If
+    On Error GoTo 0
+
+    If d.Count <> 1 Then
+        tr.Failed = True
+        tr.Message = "Expected count 1 but got " & d.Count
+        GoTo Finally
+    End If
+
+    If d(INPKEYA) <> INPVALB Then
+        tr.Failed = True
+        tr.Message = "Expected " & INPVALB &" for " & INPKEYA & _
+            " but got " & d(INPKEYA) & "."
+        GoTo Finally
+    End If
+
+Finally:
+    Set TestDictionary_OptionNoItemFailOverwrites = tr
+End Function
