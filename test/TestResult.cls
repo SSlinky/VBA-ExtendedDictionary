@@ -60,7 +60,7 @@ Attribute AssertAreEqual.VB_Description = "Asserts expected is equal to actual."
 '
     If expectedVal <> actualVal Then
         Failed = True
-        SetExpectedActualMessage CStr(expectedVal), CStr(actualVal)
+        SetExpectedActualMessage CStr(expectedVal), CStr(actualVal), forVal
     End If
     AssertAreEqual = Failed
 End Function
