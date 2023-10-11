@@ -393,3 +393,164 @@ Attribute TestDictionary_ItemReturnsItem.VB_Description = "Tests the default and
 Finally:
     Set TestDictionary_ItemReturnsItem = tr
 End Function
+
+Private Function TestDictionary_Exists() As TestResult
+Attribute TestDictionary_Exists.VB_Description = "Tests Exists property works positively and negatively."
+'   Tests Exists property works positively and negatively.
+     Dim tr As New TestResult
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
+
+'   Arrange
+    Dim d As New Dictionary
+    d.Add INPKEYA, Nothing
+
+'   Act
+    Dim posResult As Boolean
+    posResult = d.Exists(INPKEYA)
+
+    Dim negResult As Boolean
+    negResult = d.Exists(INPKEYB)
+
+'   Assert
+    If Not posResult Then
+        tr.Failed = True
+        tr.Message = "Failed positive check."
+        GoTo Finally
+    End If
+
+    If negResult Then
+        tr.Failed = True
+        tr.Message = "Failed negative check."
+        GoTo Finally
+    End If
+
+Finally:
+    Set TestDictionary_Exists = tr
+End Function
+
+Private Function TestDictionary_GetItemsReturnsAllItems() As TestResult
+Attribute TestDictionary_GetItemsReturnsAllItems.VB_Description = "Test Items returns all items."
+'   Test Items returns all items.
+     Dim tr As New TestResult
+
+'   Arrange
+    Const EXPRESA As String = "A Result"
+    Const EXPRESB As String = "B Result"
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
+    
+    Dim d As New Dictionary
+    d.Add INPKEYA, EXPRESA
+    d.Add INPKEYB, EXPRESB
+
+'   Act
+    Dim result As Variant
+    result = d.Items()
+
+'   Assert
+    On Error Resume Next
+    If result(0) <> EXPRESA Or result(1) <> EXPRESB Then
+        tr.Failed = True
+        tr.Message = "Failed items check."
+        GoTo Finally
+    End If
+
+    If Err <> 0 Then
+        tr.Failed = True
+        tr.Message = Err.Description
+        GoTo Finally
+    End If
+
+Finally:
+    Set TestDictionary_GetItemsReturnsAllItems = tr
+End Function
+
+Private Function TestDictionary_GetKeysReturnsKeys() As TestResult
+Attribute TestDictionary_GetKeysReturnsKeys.VB_Description = "Test Keys returns all keys."
+'   Test Keys returns all keys.
+     Dim tr As New TestResult
+
+'   Arrange
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
+    
+    Dim d As New Dictionary
+    d.Add INPKEYA, Nothing
+    d.Add INPKEYB, Nothing
+
+'   Act
+    Dim result As Variant
+    result = d.Keys()
+
+'   Assert
+    On Error Resume Next
+    If result(0) <> INPKEYA Or result(1) <> INPKEYB Then
+        tr.Failed = True
+        tr.Message = "Failed keys check."
+        GoTo Finally
+    End If
+
+    If Err <> 0 Then
+        tr.Failed = True
+        tr.Message = Err.Description
+        GoTo Finally
+    End If
+
+Finally:
+    Set TestDictionary_GetKeysReturnsKeys = tr
+End Function
+
+Private Function TestDictionary_GetDataReturnsData() As TestResult
+Attribute TestDictionary_GetDataReturnsData.VB_Description = "Test data out matches data in."
+'   Test data out matches data in.
+     Dim tr As New TestResult
+
+'   Arrange
+    Dim bulkData() As Variant
+    ReDim bulkData(1 To 3, 1 To 4)
+
+    Const HDRS As String = "ABC"
+    Const VALS As String = " 123"
+
+    Dim i As Long
+    For i = 1 To UBound(bulkData, 1)
+        Dim j As Long
+        For j = 1 To UBound(bulkData, 2)
+            If j = 1 Then
+                bulkData(i, j) = Mid(HDRS, i, 1)
+            Else
+                bulkData(i, j) = Mid(HDRS, i, 1) & Mid(VALS, j, 1)
+            End If
+        Next j
+    Next i
+
+    On Error Resume Next
+    Dim d As New Dictionary
+    d.AddBulk bulkData
+
+'   Act
+    Dim results As Variant
+    results = d.GetData()
+
+'   Assert
+    If Err <> 0 Then
+        tr.Failed = True
+        tr.Message = "Exception unexpected: " _
+            & Err & " - " & Err.Description
+        GoTo Finally
+    End If
+    On Error GoTo 0
+
+    For i = 1 To UBound(bulkData, 1)
+        For j = 2 To UBound(bulkData, 2)
+            If results(i, j) <> bulkData(i, j) Then
+                tr.Failed = True
+                tr.Message = "Dictionary data failed validation."
+            End If
+        Next j
+    Next i
+
+Finally:
+    Set TestDictionary_GetDataReturnsData = tr
+End Function
