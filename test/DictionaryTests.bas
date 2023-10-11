@@ -48,6 +48,17 @@ Attribute RunTests.VB_Description = "Runs all tests."
     
 End Sub
 
+Sub RunSingle()
+    Dim tr As TestResult
+    Set tr = TestDictionary_ItemReturnsItem()
+    
+    If tr.Failed Then
+        Debug.Print "FAIL: " & tr.Name, tr.Message
+    Else
+        Debug.Print "PASS"
+    End If
+End Sub
+
 Private Sub RunTest(testName As String)
 Attribute RunTest.VB_Description = "Runs the named test and stores the result."
 '   Runs the named test and stores the result.
@@ -346,8 +357,8 @@ Finally:
 End Function
 
 Private Function TestDictionary_ItemReturnsItem() As TestResult
-Attribute TestDictionary_CountItems.VB_Description = "Tests the Count property of the dictionary."
-'   Tests the Count property of the dictionary.
+Attribute TestDictionary_ItemReturnsItem.VB_Description = "Tests the default and explicit item return."
+'   Tests the default and explicit item return.
 '
     Dim tr As New TestResult
 
