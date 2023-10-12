@@ -528,40 +528,37 @@ Finally:
     Set TestDictionary_OptionNoItemFailOverwrites = tr
 End Function
 
-' TODO: Investigate!
-'   Error handling in the Dictionary class seems to be messing with
-'   error handling in the test scope. Exceptions thrown by the dictionary
-'   do not seem to be caught (as they should) at this level.
+Private Function TestDictionary_NoOptionNoItemFailThrows() As TestResult
+Attribute TestDictionary_NoOptionNoItemFailThrows.VB_Description = "Without OptionNoItemFail throws rather than overwriting."
+'   Without OptionNoItemFail throws rather than overwriting.
+'   This test requires "Error Handling > Break on Unhandled Errors" set.
+'   If "Break in class module" is set, the 
+    Dim tr As New TestResult
 
-' Private Function TestDictionary_NoOptionNoItemFailThrows() As TestResult
-' Attribute TestDictionary_NoOptionNoItemFailThrows.VB_Description = "Without OptionNoItemFail throws rather than overwriting."
-' '   Without OptionNoItemFail throws rather than overwriting.
-'     Dim tr As New TestResult
-
-' '   Arrange
-'     Const DUPLICATEKEYEX As Long = 457
-'     Const INPKEYA As String = "A"
-'     Const INPVALA As String = "A Value"
-'     Const INPVALB As String = "A Value"
+'   Arrange
+    Const DUPLICATEKEYEX As Long = 457
+    Const INPKEYA As String = "A"
+    Const INPVALA As String = "A Value"
+    Const INPVALB As String = "A Value"
     
-' '   Act
-'     Dim d As New Dictionary
-'     d.OptionNoItemFail = False
+'   Act
+    Dim d As New Dictionary
+    d.OptionNoItemFail = False
 
-'     d.Add INPKEYA, INPVALA
-'     On Error Resume Next
-'     d.Add INPKEYA, INPVALB
+    d.Add INPKEYA, INPVALA
+    On Error Resume Next
+    d.Add INPKEYA, INPVALB
 
-' '   Assert
-'     If tr.AssertRaised(DUPLICATEKEYEX) Then GoTo Finally
-'     On Error GoTo 0
+'   Assert
+    If tr.AssertRaised(DUPLICATEKEYEX) Then GoTo Finally
+    On Error GoTo 0
 
-'     If tr.AssertAreEqual(1, d.Count, "count") Then GoTo Finally
-'     If tr.AssertAreEqual(INPVALA, d(INPKEYA), INPKEYA) Then GoTo Finally
+    If tr.AssertAreEqual(1, d.Count, "count") Then GoTo Finally
+    If tr.AssertAreEqual(INPVALA, d(INPKEYA), INPKEYA) Then GoTo Finally
 
-' Finally:
-'     Set TestDictionary_NoOptionNoItemFailThrows = tr
-' End Function
+Finally:
+    Set TestDictionary_NoOptionNoItemFailThrows = tr
+End Function
 
 Private Function TestDictionary_DataRowsAndColsCorrect() As TestResult
 Attribute TestDictionary_DataRowsAndColsCorrect.VB_Description = "Tests the DataRows and DataCols properties."
