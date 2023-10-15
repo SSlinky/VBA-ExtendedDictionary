@@ -166,6 +166,13 @@ Attribute DataRows.VB_Description = "Returns the column count that would be retu
     DataCols = Iif(OptionUseRowMode, Me.Count, mLargestValueSize + LongMin(1, Me.Count))
 End Property
 
+Public Property Get NewEnum() As IUnknown
+Attribute NewEnum.VB_Description = "Enables iteration with a For Each loop."
+Attribute NewEnum.VB_UserMemId = -4
+'   Enables iteration with a For Each loop.
+    Set NewEnum = mBaseDict.[_NewEnum]
+End Property
+
 
 ' Constructor
 '-------------------------------------------------------------------------------
