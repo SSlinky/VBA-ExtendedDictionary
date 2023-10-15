@@ -731,3 +731,34 @@ Attribute TestDictionary_GetDataWorksWithVariableArrays.VB_Description = "Github
 Finally:
     Set TestDictionary_GetDataWorksWithVariableArrays = tr
 End Function
+
+Private Function TestDictionary_ForEach() As TestResult
+Attribute TestDictionary_ForEach.VB_Description = "Tests the For Each functionality on keys."
+'   Tests the For Each functionality on keys.
+    Dim tr As New TestResult
+
+'   Arrange
+    Dim inpKeys() As Variant
+    inpKeys = Array("a", "b", "c")
+
+    Dim inpVals() As Variant
+    inpVals = Array(1, 2, 3)
+
+    Dim d As New Dictionary
+    Dim i As Long
+    For i = 0 To UBound(inpKeys)
+        d.Add inpKeys(i), inpVals(i)
+    Next i
+
+'   Act and Assert
+    i = 0
+    Dim k As Variant
+    For Each k In d.Keys
+        If Not tr.AssertAreEqual(inpKeys(i), k) Then GoTo Finally
+        If Not tr.AssertAreEqual(inpVals(i), d(k)) Then GoTo Finally
+        i = i + 1
+    Next k
+
+Finally:
+    Set TestDictionary_ForEach = tr
+End Function
