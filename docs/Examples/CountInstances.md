@@ -18,27 +18,23 @@ ExtendedDictionary (ed) makes this trivial.
 Option Explicit
 
 Sub CountInstances()
-
-'   Variable declarations
-    Dim arr As Variant
-    Dim rg  As Range
-    Dim k   As Variant
-    Dim r   As Range
-    
     Dim ed As New Dictionary
     
 '   Arrange the visible data into an array
+    Dim rg  As Range
     Set rg = Range("A1:A" & Range("A" & Rows.Count).End(xlUp).Row)
     
 '   Each contiguous batch of cells must be iterated through
 '   since .SpecialCells returns a union and .Value gets the
 '   values from the first range in the union only.
+    Dim r   As Range
     For Each r In rg.SpecialCells(xlCellTypeVisible, True).Areas
 '       Add the visible cells to the dictionary, counting the keys.
         ed.AddBulk r.Value, OptionCountKeys:=True
     Next r
     
 '   Print the count values to the immediate window.
+    Dim k   As Variant
     For Each k In Array("INAUDIBLE", "NO RESPONSE")
         Debug.Print k & ":", ed.GetValue(k, 0)
     Next
