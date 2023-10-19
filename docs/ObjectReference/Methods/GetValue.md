@@ -1,8 +1,10 @@
 # GetValue method
+
 Wrapper property that returns the value for the specified key if it exists.
 If it doesn't exist, it returns the default rather than raise an error.
 
 ## Syntax
+
 _object_.**GetValue** _Key_, _ItemDefault_
 
 The **GetValue** method has the following parts:
@@ -14,9 +16,11 @@ _Key_           | Required. They key associated with the value being looked up.
 _ItemDefault_   | Required. The default value to be returned if the key is not found.
 
 ## Remarks
+
 This method has been added to provide an equivalent getter to those found in other modern languages.
 
 ## Examples
+
 ### Key value counts
 
 ```vba

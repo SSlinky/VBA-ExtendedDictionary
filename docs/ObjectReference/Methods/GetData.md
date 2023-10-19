@@ -1,7 +1,9 @@
 # GetData method
+
 Generates a Variant array with the key / value pairs in the Scripting.Dictionary.
 
 ## Syntax
+
 _object_.**GetData** (_[OptionUseRowMode]_)
 
 The **GetData** method has the following parts:
@@ -12,6 +14,7 @@ _object_            | Required. Always the name of a **Dictionary** object.
 _OptionUseRowMode_  | Optional. Orients keys and values vertically or horizontally.
 
 ## Remarks
+
 This function returns a base 1 2D array of type variant. This means it is already in an appropriate format to insert into a range.
 
 The shape of the array will depend on the data. They keys will define the size of the first or second dimension, depending on whether `OptionUseRowMode` is True or not. The values will populate the other dimension if they exist.
@@ -19,6 +22,7 @@ The shape of the array will depend on the data. They keys will define the size o
 Note that if no data exists in the dictionary, the returned array will be a single cell with Nothing.
 
 ## Examples
+
 ### Using OptionUserRowMode
 
 `OptionUseRowMode:=True` keys are arranged across columns in the first row. Values populate rows below their respective key.
@@ -38,6 +42,7 @@ Note that if no data exists in the dictionary, the returned array will be a sing
 | **k3** | v3a | v3b | v3c |
 
 ### Returned Array Sizes
+
 Array sizes returned by data type. Assumes `OptionUseRowMode` is `False`. Note that in these cases, the first column is the key so
 the values start from the second column.
 

@@ -1,11 +1,15 @@
 # Counting value occurrences
+
 Based on [this question](https://www.reddit.com/r/vba/comments/lp5vxz/vba_code_to_count_for_certain_instances_of_text/) asked on Reddit.
 
 ## Problem statement
+
 Data exists in column A. Occurrences of the words "INAUDIBLE" and "NO RESPONSE" must be counted if the cell is not hidden.
 
 ## Solution
+
 ExtendedDictionary (ed) makes this trivial.
+
 1. Declare variablesa and define the data range.
 2. Add the data to ed using the `AddBulk` method with `OptionCountKeys` enabled.
 3. Use the `GetValue` method to safely retrieve a value, or return the deafult 0 if it doesn't exist.
