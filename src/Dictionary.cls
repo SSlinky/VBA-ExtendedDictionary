@@ -3,6 +3,7 @@ BEGIN
   MultiUse = -1  'True
 END
 Attribute VB_Name = "Dictionary"
+Attribute VB_Description = "A wrapper that extends Scripting.Dictionary functionality."
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -32,7 +33,7 @@ Option Explicit
 
 '-------------------------------------------------------------------------------
 '   Class: Dictionary
-'   A wrapper that extends Scripting.Dictionary functionality
+'   A wrapper that extends Scripting.Dictionary functionality.
 '-------------------------------------------------------------------------------
 
 ' Enums
