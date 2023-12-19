@@ -5,7 +5,7 @@ Dictionary object that extends the Scripting.Dictionary
 [![VBA](https://img.shields.io/badge/vba-VB--6-success)](https://docs.microsoft.com/en-us/office/vba/api/overview/)
 [![Buy me a Beer!](https://img.shields.io/badge/Buy%20me%20a-Beer-yellow)](https://www.buymeacoffee.com/sslinky)
 
-ExtendedDictionary exposes the standard functionality of a [Scripting.Dictionary object](https://docs.microsoft.com/en-au/office/vba/language/reference/user-interface-help/dictionary-object) as well as providing additional useful functionality that avoids boilerplate.
+ExtendedDictionary exposes the standard functionality of a [Scripting.Dictionary object](https://learn.microsoft.com/en-au/office/vba/language/reference/user-interface-help/dictionary-object) as well as providing additional useful functionality that avoids boilerplate.
 
 * Load range of values as key / value pairs for fast dictionary population.
 * Better control over what does and does not raise an error.
