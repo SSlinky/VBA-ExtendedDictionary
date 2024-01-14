@@ -32,5 +32,5 @@ cityCounter.AddBulk Range("A1:A500").Value, OptionCountKeys=True
 ' would result in an error but the desired result is 0.
 
 Debug.Print "Perth: " & cityCounter.GetValue("Perth", 0)        ' Perth: 5
-Debug.Print "Perth: " & cityCounter.GetValue("Melbourne", 0)    ' Melbourne: 0
+Debug.Print "Melbourne: " & cityCounter.GetValue("Melbourne", 0)    ' Melbourne: 0
 ```
