@@ -63,27 +63,27 @@ Private mLargestValueSize
 
 ' Properties
 '-------------------------------------------------------------------------------
-Public Property Let OptionNoItemFail(var As Boolean)
+Public Property Let OptionNoItemFail(val As Boolean)
 Attribute OptionNoItemFail.VB_Description = "Prevents a duplicative item add from raising an exception."
 '   Prevents a duplicative item add from raising an exception.
 '
 '   When setting an item, it overwrites the existing one.
 '   When getting an item, it prevents the key from being added.
 '
-    mOptionNoItemFail = var
+    mOptionNoItemFail = val
 End Property
 
 Public Property Get OptionNoItemFail() As Boolean
     OptionNoItemFail = mOptionNoItemFail
 End Property
 
-Public Property Let CompareMode(var As CompareModeType)
+Public Property Let CompareMode(val As CompareModeType)
 Attribute CompareMode.VB_Description = "Sets the compare mode for the dictionary."
 '   Sets the compare mode for the dictionary.
 '
 '   A value representing the comparison mode used by functions such
 '   as StrComp. Can only be changed while the dictionary has no data.
-    mBaseDict.CompareMode = var
+    mBaseDict.CompareMode = val
 End Property
 
 Public Property Get CompareMode() As CompareModeType
