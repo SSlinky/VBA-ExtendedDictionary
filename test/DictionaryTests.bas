@@ -50,7 +50,8 @@ End Sub
 
 Sub RunSingle()
     Dim tr As TestResult
-    Set tr = TestDictionary_ItemReturnsItem()
+    Set tr = TestDictionary_AddKeyOnly()
+    tr.Name = "TestDictionary_AddKeyOnly"
     Debug.Print tr.ToString
 End Sub
 
@@ -127,6 +128,32 @@ Attribute TestDictionary_Add.VB_Description = "Add an item to the dictionary."
 Finally:
     On Error GoTo 0
     Set TestDictionary_Add = tr
+End Function
+
+Private Function TestDictionary_AddKeyOnly() As TestResult
+Attribute TestDictionary_AddKeyOnly.VB_Description = "Adding a key with no value to the dictionary."
+'   Adding a key with no value to the dictionary.
+    Dim tr As New TestResult
+
+'   Arrange
+    Const ADDKEY As String = "K"
+    Dim d As New Dictionary
+
+'   Act
+    On Error Resume Next
+    d.Add ADDKEY
+
+'   Assert
+    If tr.AssertNoException() Then GoTo Finally
+    On Error GoTo 0
+
+    If tr.AssertAreEqual(1, d.Count) Then GoTo Finally
+    If tr.AssertIsTrue(d.Exists(ADDKEY), "Key exists") Then GoTo Finally
+    If tr.AssertAreEqual(Nothing, d(ADDKEY)) Then GoTo Finally
+
+Finally:
+    On Error GoTo 0
+    Set TestDictionary_AddKeyOnly = tr
 End Function
 
 Private Function TestDictionary_AddBulkColMode() As TestResult
