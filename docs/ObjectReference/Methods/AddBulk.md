@@ -1,6 +1,6 @@
 # AddBulk method
 
-Adds key value pairs from a 2D array. Supports keys as first row or firt column. Automatically detects array size and adds values based on number of values per key.
+Adds key value pairs from a 2D array. Supports keys as first row or first column. Automatically detects array size and adds values based on number of values per key.
 
 ## Syntax
 
