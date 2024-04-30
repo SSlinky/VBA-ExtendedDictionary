@@ -66,10 +66,31 @@ Attribute AssertAreEqual.VB_Description = "Asserts expected is equal to actual."
 '   Returns:
 '       False if the assertion passed.
 '
-    If expectedVal <> actualVal Then
-        Failed = True
-        SetExpectedActualMessage CStr(expectedVal), CStr(actualVal), forVal
-    End If
+    Select Case True
+'       Only one value is an object.
+        Case Is = IsObject(expectedVal) Xor IsObject(actualVal):
+            Failed = True
+            SetExpectedActualMessage _
+                TypeName(expectedVal), _
+                TypeName(actualVal), _
+                forVal
+'       Both values are objects (test reference).
+        Case Is = IsObject(expectedVal) And IsObject(actualVal):
+            If Not expectedVal Is actualVal Then
+                Failed = True
+                SetExpectedActualMessage _
+                    TypeName(expectedVal), _
+                    TypeName(actualVal), _
+                    forVal
+            End If
+'       Neither values are objects.            
+        Case Else:
+            If expectedVal <> actualVal Then
+                Failed = True
+                SetExpectedActualMessage CStr(expectedVal), CStr(actualVal), forVal
+            End If
+    End Select
+
     AssertAreEqual = Failed
 End Function
 
@@ -108,7 +129,7 @@ Attribute AssertIsTrue.VB_Description = "Asserts the value is true."
 '
     If Not val Then
         Failed = True
-        Message = "Failed " & ctx
+        Message = "Is not true [" & ctx & "]"
     End If
 
     AssertIsTrue = Failed
