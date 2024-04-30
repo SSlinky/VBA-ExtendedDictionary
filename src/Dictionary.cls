@@ -35,6 +35,11 @@ Option Explicit
 '   Class: Dictionary
 '   A wrapper that extends Scripting.Dictionary functionality.
 '-------------------------------------------------------------------------------
+'   Exceptions thrown by the Scripting.Dictionary bubble up to the Dictionary
+'   but do not seem to go further than that, even if you have your own error
+'   handling. That's why you'll see exception handling in here that rethrows the
+'   exception. This is so that it can be caught by the calling method.
+'       #JustVbaThings
 
 ' Enums
 '-------------------------------------------------------------------------------
@@ -100,15 +105,27 @@ Public Property Let Item(Key As Variant, val As Variant)
 Attribute Item.VB_UserMemId = 0
 Attribute Item.VB_Description = "Sets or returns an item for a specified key in a Dictionary object."
 '   Sets or returns an item for a specified key in a Dictionary object.
-    If mOptionNoItemFail Then On Error Resume Next
+Try:
+    On Error GoTo Catch
     mBaseDict.Item(Key) = val
     If Err = 0 Then MetaTrackingAdd val
+    Exit Property
+
+Catch:
+    If mOptionNoItemFail Then Exit Property
+    Err.Raise Err
 End Property
 
 Public Property Set Item(Key As Variant, val As Variant)
-    If mOptionNoItemFail Then On Error Resume Next
+Try:
+    On Error GoTo Catch
     Set mBaseDict.Item(Key) = val
-    If Err = 0 Then MetaTrackingAdd val
+    MetaTrackingAdd val
+    Exit Property
+
+Catch:
+    If mOptionNoItemFail Then Exit Property
+    Err.Raise Err
 End Property
 
 Public Property Get Item(Key As Variant) As Variant
@@ -195,18 +212,24 @@ Attribute Add.VB_Description = "Adds a key and value pair to the dictionary."
 '       Key: The key to add the value to.
 '       val: The value to add.
 '
-    If mOptionNoItemFail Then On Error Resume Next
+    On Error Resume Next
     mBaseDict.Add Key, val
-    
-    If Err = 457 Then
-        If IsObject(val) Then
-            Set Item(Key) = val
-        Else
-            Item(Key) = val
-        End If
-    Else
-        MetaTrackingAdd val
-    End If
+
+    Select Case True
+        Case Is = Err = 457 And mOptionNoItemFail
+            If IsObject(val) Then
+                Set Item(Key) = val
+            Else
+                Item(Key) = val
+            End If
+        Case Is = Err = 457
+            Err.Raise vbObjectError + 457, "Dictionary", _
+                Key & " is already associated with the dictionary."
+        Case Is = Err <> 0
+            Err.Raise Err
+        Case Else
+            MetaTrackingAdd val
+    End Select
 End Sub
 
 Public Sub Remove(Key As Variant)
@@ -441,14 +464,14 @@ Attribute NArrayDimensions.VB_Description = "Returns the number of dimensions fo
 '
     
 '   Test array dimensions until exception raised
-    On Error GoTo Result
+    On Error GoTo Finally
     Dim i As Long
     Do
         i = i + 1
         NArrayDimensions = UBound(arr, i)
     Loop
     
-Result:
+Finally:
 '   Expect to catch a Type mismatch exception.
 '   Expect to catch a Subscript out of range exception.
     If Err = 13 Or Err = 9 Then NArrayDimensions = i - 1 Else Err.Raise Err

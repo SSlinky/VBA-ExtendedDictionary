@@ -577,7 +577,7 @@ Attribute TestDictionary_NoOptionNoItemFailThrows.VB_Description = "Without Opti
     d.Add INPKEYA, INPVALB
 
 '   Assert
-    If tr.AssertRaised(DUPLICATEKEYEX) Then GoTo Finally
+    If tr.AssertRaised(vbObjectError + DUPLICATEKEYEX) Then GoTo Finally
     On Error GoTo 0
 
     If tr.AssertAreEqual(1, d.Count, "count") Then GoTo Finally
