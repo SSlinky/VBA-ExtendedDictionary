@@ -184,7 +184,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub Add(Key As Variant, val As Variant)
+Public Sub Add(Key As Variant, Optional val As Variant = Nothing)
 Attribute Add.VB_Description = "Adds a key and value pair to the dictionary."
 '   Adds a key and value pair to the dictionary.
 '

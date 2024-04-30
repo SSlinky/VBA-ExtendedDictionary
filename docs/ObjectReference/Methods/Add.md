@@ -12,7 +12,7 @@ Part               | Description
 :---               | :---
 _object_           | Required. Always the name of a **Dictionary** object.
 _Key_              | Required. They key associated with the item being added.
-_Val_              | Required. The value associated with the key being added.
+_[Val]_            | Optional. The value associated with the key being added.
 
 ## Remarks
 
