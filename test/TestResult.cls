@@ -154,6 +154,24 @@ Attribute AssertIsFalse.VB_Description = "Asserts the value is false."
     AssertIsFalse = Failed
 End Function
 
+Public Function AssertIs(objA As Object, objB As Object, ctx As String) As Boolean
+Attribute AssertIs.VB_Description = "Asserts two references are the same object."
+'   Asserts two references are the same object.
+'
+'   Args:
+'       objA: The first object.
+'       objB: The second object.
+'
+'   Returns:
+'       False if the assertion passed.
+'
+    If Not objA Is objB Then
+        Failed = True
+        Message = "Object References do not match for " & ctx & "."
+    End If
+    AssertIs = Failed
+End Function
+
 Public Function AssertNoException() As Boolean
 Attribute AssertNoException.VB_Description = "Asserts no exception raised."
 '   Asserts no exception raised.
