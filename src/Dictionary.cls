@@ -144,9 +144,9 @@ Attribute Key.VB_Description = "Updates an existing key with a new one."
     mBaseDict.Key(Key) = NewKey
 End Property
 
-Public Property Get GetValue(Key As Variant, ItemDefault As Variant) As Variant
-Attribute GetValue.VB_Description = "Gets a value for the specified key or returns the deafult. if not found"
-'   Gets a value for the specified key or returns the deafult if not found.
+Public Property Get GetValue(Key As Variant, Optional def As Variant) As Variant
+Attribute GetValue.VB_Description = "Gets a value for the specified key or returns the default. if not found"
+'   Gets a value for the specified key or returns the default if not found.
     If mBaseDict.Exists(Key) Then
         If IsObject(mBaseDict.Item(Key)) Then
             Set GetValue = mBaseDict.Item(Key)
@@ -154,11 +154,14 @@ Attribute GetValue.VB_Description = "Gets a value for the specified key or retur
             GetValue = mBaseDict.Item(Key)
         End If
     Else
-        If IsObject(ItemDefault) Then
-            Set GetValue = ItemDefault
-        Else
-            GetValue = ItemDefault
-        End If
+        Select Case True
+            Case Is = IsMissing(def):
+                Set GetValue = Nothing
+            Case Is = IsObject(def):
+                Set GetValue = def
+            Case Else:
+                GetValue = def
+        End Select
     End If
 End Property
 

@@ -789,3 +789,27 @@ Attribute TestDictionary_ForEach.VB_Description = "Tests the For Each functional
 Finally:
     Set TestDictionary_ForEach = tr
 End Function
+
+Private Function TestDictionary_GetValueGetsValue() As TestResult
+Attribute TestDictionary_GetValueGetsValue.VB_Description = "Get value where key exists."
+'   Get value where key exists.
+    Dim tr As New TestResult
+
+'   Arrange
+    Const EXPRESA As String = "A Result"
+    Const EXPRESB As String = "B Result"
+    Const INPKEYA As String = "A"
+    Const INPKEYB As String = "B"
+
+'   Act
+    Dim d As New Dictionary
+    d.Add INPKEYA, EXPRESA
+
+'   Assert
+    If tr.AssertAreEqual(EXPRESA, d.GetValue(INPKEYA, EXPRESB), INPKEYA) Then GoTo Finally
+    If tr.AssertAreNotEqual(EXPRESB, d.GetValue(INPKEYB, EXPRESA), INPKEYB) Then GoTo Finally
+    If tr.AssertIs(Nothing, d.GetValue(INPKEYB), INPKEYB & " - no default") Then GoTo Finally
+
+Finally:
+    Set TestDictionary_GetValueGetsValue = tr
+End Function
