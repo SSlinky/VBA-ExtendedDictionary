@@ -291,7 +291,7 @@ Attribute AddBulk.VB_Description = "Adds key value pairs from a 2D array."
 '
         ' Dictionary key
     Dim v As Variant    ' Dictionary value
-    
+
     If OptionCountKeys Then mOptionNoItemFail = True
 
 '   Transpose the array if we're using row mode so that we can use the same
@@ -299,7 +299,7 @@ Attribute AddBulk.VB_Description = "Adds key value pairs from a 2D array."
     If OptionUseRowMode Then
         ValueArray2D = Application.Transpose(ValueArray2D)
     End If
-    
+
 '   Set the shape of the data.   
     Dim rowCount As Long
     rowCount = UBound(ValueArray2D, 1)
@@ -326,7 +326,7 @@ Attribute AddBulk.VB_Description = "Adds key value pairs from a 2D array."
                     Set v = DefaultValue
                 Else
                     v = DefaultValue
-                End If            
+                End If
         End Select
         Me.Add k, v
     Next i
@@ -385,15 +385,15 @@ Attribute GetData.VB_Description = "Returns the dictionary data as a 2D array wi
 
     Dim dataRowCount As Long
     dataRowCount = Me.DataRows()
-    
+
     Dim dataColCount As Long
     dataColCount = Me.DataCols()
-    
+
 '   Set up results array in the shape of the keys and values
 '   adding an additional column to fit the keys as a column
     Dim results() As Variant
     ReDim results(1 To dataRowCount, _
-                  1 To dataColCount)
+        1 To dataColCount)
 
 '   Populate the row(s) and column(s)
     Dim r As Long
@@ -413,13 +413,13 @@ Attribute GetData.VB_Description = "Returns the dictionary data as a 2D array wi
             results(r, 2) = arrVals(r - 1)
         End If
     Next r
-    
+
 '   Return the data as normal or row mode.    
     If OptionUseRowMode Then
         GetData = Application.Transpose(results)
     Else
         GetData = results
-    End If    
+    End If
 End Function
 
 
@@ -439,7 +439,7 @@ Attribute GetDataValues.VB_Description = "Returns a 1D array of values from the 
 '
     Dim result As Variant
     ReDim result(UBound(arr, 2) - 2)
-    
+
     Dim i As Long
     For i = 1 To UBound(arr, 2)
         If i <> hIdx Then
@@ -465,7 +465,7 @@ Attribute NArrayDimensions.VB_Description = "Returns the number of dimensions fo
 '
 '   Raises:
 '
-    
+
 '   Test array dimensions until exception raised
     On Error GoTo Finally
     Dim i As Long
@@ -473,7 +473,7 @@ Attribute NArrayDimensions.VB_Description = "Returns the number of dimensions fo
         i = i + 1
         NArrayDimensions = UBound(arr, i)
     Loop
-    
+
 Finally:
 '   Expect to catch a Type mismatch exception.
 '   Expect to catch a Subscript out of range exception.
@@ -509,7 +509,7 @@ Attribute MetaTrackingRemove.VB_Description = "Tracks the largest sized value ar
 '   Get the count of the value array we're removing.
     Dim removedValSize As Long
     removedValSize = GetValueOrArraySize(remVal)
-    
+
 '   No need to test everything if the tracked value wasn't the largest.    
     If mLargestValueSize > removedValSize Then Exit Sub
 
@@ -518,13 +518,13 @@ Attribute MetaTrackingRemove.VB_Description = "Tracks the largest sized value ar
     mLargestValueSize = 0
     For Each val In Me.Items
         valSize = GetValueOrArraySize(val)
-        
+
 '       Shortcut if next largest is the same as value we're untracking.
         If valSize = removedValSize Then
             mLargestValueSize = valSize
             Exit Sub
         End If
-        
+
         If valSize > mLargestValueSize Then
             mLargestValueSize = valSize
         End If
@@ -543,7 +543,7 @@ Attribute GetValueOrArraySize.VB_Description = "Returns the length of the array,
 '
 '   Type checking like this prevents an exception if not an object.
     If TypeName(val) = "Nothing" Then Exit Function
-    
+
     Dim dims As Long
     dims = NArrayDimensions(val)
 

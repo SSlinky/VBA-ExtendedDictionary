@@ -45,7 +45,7 @@ Attribute RunTests.VB_Description = "Runs all tests."
     Debug.Print "   Passed: " & p & " (" & Format(p / (p + f), "0.00%)")
     Debug.Print "   Failed: " & f & " (" & Format(f / (p + f), "0.00%)")
     Debug.Print "-------------------------------------------"
-    
+
 End Sub
 
 Sub RunSingle()
@@ -100,7 +100,7 @@ Attribute GetTestNames.VB_Description = "Gets the test names from this module."
             results.Add funcName
         End If
     Next i
-    
+
     Set GetTestNames = results
 End Function
 
@@ -431,7 +431,7 @@ Attribute TestDictionary_GetItemsReturnsAllItems.VB_Description = "Test Items re
     Const EXPRESB As String = "B Result"
     Const INPKEYA As String = "A"
     Const INPKEYB As String = "B"
-    
+
     Dim d As New Dictionary
     d.Add INPKEYA, EXPRESA
     d.Add INPKEYB, EXPRESB
@@ -458,7 +458,7 @@ Attribute TestDictionary_GetKeysReturnsKeys.VB_Description = "Test Keys returns 
 '   Arrange
     Const INPKEYA As String = "A"
     Const INPKEYB As String = "B"
-    
+
     Dim d As New Dictionary
     d.Add INPKEYA, Nothing
     d.Add INPKEYB, Nothing
@@ -535,7 +535,7 @@ Attribute TestDictionary_OptionNoItemFailOverwrites.VB_Description = "OptionNoIt
     Const INPKEYA As String = "A"
     Const INPVALA As String = "A Value"
     Const INPVALB As String = "Visibly different value to A"
-    
+
 '   Act
     Dim d As New Dictionary
     d.OptionNoItemFail = True
@@ -567,7 +567,7 @@ Attribute TestDictionary_NoOptionNoItemFailThrows.VB_Description = "Without Opti
     Const INPKEYA As String = "A"
     Const INPVALA As String = "A Value"
     Const INPVALB As String = "A Value"
-    
+
 '   Act
     Dim d As New Dictionary
     d.OptionNoItemFail = False
@@ -649,7 +649,7 @@ Attribute TestDictionary_RemoveRemovesKey.VB_Description = "Test that remove rem
 '   Arrange
     Const INPKEYA As String = "A"
     Const INPKEYB As String = "B"
-    
+
     Dim d As New Dictionary
     d.Add INPKEYA, Nothing
     d.Add INPKEYB, Nothing
