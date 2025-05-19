@@ -261,13 +261,13 @@ Attribute RemoveAll.VB_Description = "Removes all keys from the dictionary."
 End Sub
 
 Public Sub AddBulk( _
-    ValueArray2D As Variant, _
+    ValueArray As Variant, _
     Optional OptionUseRowMode As Boolean, _
     Optional OptionCountKeys As Boolean, _
     Optional DefaultValue As Variant, _
     Optional HeadersIndex As Long = 1)
-Attribute AddBulk.VB_Description = "Adds key value pairs from a 2D array."
-'   Adds key value pairs from a 2D array.
+Attribute AddBulk.VB_Description = "Adds key value pairs from a 1 or 2D array."
+'   Adds key value pairs from a 1 or 2D array.
 '
 '   Supports keys as first row or firt column. Automatically detects array
 '   size and adds values based on number of values per key.
@@ -276,7 +276,7 @@ Attribute AddBulk.VB_Description = "Adds key value pairs from a 2D array."
 '       >1: Values are a 1D array of values
 '
 '   Args:
-'       ValueArray2D: The data to add to the dictionary.
+'       ValueArray: The data to add to the dictionary.
 '       OptionUseRowMode: Use the first row instead of column as keys.
 '       OptionCountKeys: The value is the count of keys.
 '       DefaultValue: Set a default item value.
@@ -297,30 +297,42 @@ Attribute AddBulk.VB_Description = "Adds key value pairs from a 2D array."
 '   Transpose the array if we're using row mode so that we can use the same
 '   logic to add bulk data to the dictionary (as if it is in column mode).
     If OptionUseRowMode Then
-        ValueArray2D = Application.Transpose(ValueArray2D)
+        ValueArray = Application.Transpose(ValueArray)
     End If
 
 '   Set the shape of the data.   
     Dim rowCount As Long
-    rowCount = UBound(ValueArray2D, 1)
+    rowCount = UBound(ValueArray, 1)
 
-    Dim colCount As Long
-    colCount = UBound(ValueArray2D, 2)
+    Dim isSingleDimension As Boolean
+    isSingleDimension = CountArrayDimensions(ValueArray)
+
+    If Not isSingleDimension Then
+        Dim colCount As Long
+        colCount = UBound(ValueArray, 2)
+    End If
 
 '   Add the keys and values to the dictionary.
     Dim i As Long
-    For i = 1 To rowCount
+    For i = LBound(ValueArray, 1) To rowCount
         Dim k As Variant
-        k = ValueArray2D(i, HeadersIndex)
+
+'       Handle a "headers only" type array.
+        If isSingleDimension Then
+            k = ValueArray(i)
+            Me.Add k, Me.GetValue(k, 0) + 1
+            GoTo Continue
+        End If
+        k = ValueArray(i, HeadersIndex)
 
 '       Determine the value and add it.
         Select Case True
             Case Is = OptionCountKeys:
                 v = Me.GetValue(k, 0) + 1
             Case Is = colCount = 2:
-                v = ValueArray2D(i, 2)
+                v = ValueArray(i, 2)
             Case Is = colCount > 2:
-                v = GetDataValues(ValueArray2D, i, HeadersIndex)
+                v = GetDataValues(ValueArray, i, HeadersIndex)
             Case Else:
                 If IsObject(DefaultValue) Then
                     Set v = DefaultValue
@@ -329,6 +341,7 @@ Attribute AddBulk.VB_Description = "Adds key value pairs from a 2D array."
                 End If
         End Select
         Me.Add k, v
+Continue:
     Next i
 End Sub
 
@@ -569,4 +582,22 @@ Attribute LongMin.VB_Description = "Returns the smaller of the two passed in val
 '       a if a is smaller, else b.
 '
     LongMin = Iif(a < b, a, b)
+End Function
+
+Private Function CountArrayDimensions(arr As Variant) As Long
+Attribute Is2DArray.VB_Description = "Returns the number of dimensions in an array."
+'   Returns true if the array is 1D.
+'
+    On Error Resume Next
+    Do
+        Dim i As Long
+        i = i + 1
+
+        Dim var As Long
+        var = UBound(arr, i)
+        If Err <> 0 Then
+            CountArrayDimensions = i - 1
+            Exit Function
+        End If
+    Loop
 End Function
