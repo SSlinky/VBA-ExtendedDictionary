@@ -305,7 +305,7 @@ Attribute AddBulk.VB_Description = "Adds key value pairs from a 1 or 2D array."
     rowCount = UBound(ValueArray, 1)
 
     Dim isSingleDimension As Boolean
-    isSingleDimension = CountArrayDimensions(ValueArray)
+    isSingleDimension = CountArrayDimensions(ValueArray) = 1
 
     If Not isSingleDimension Then
         Dim colCount As Long
